@@ -1,0 +1,8 @@
+*.pdf
+
+.*
+*.log_*
+*.root
+
+alignment/print_fit
+alignment/test_linearity
