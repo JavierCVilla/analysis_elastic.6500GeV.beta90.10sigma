@@ -109,13 +109,13 @@ void Init_base()
 void Init_45b_56t()
 {
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = -5.2E-6; anal.cut1_si = 9.5E-6;
-	anal.cut2_a = 1.; anal.cut2_c = -0.1E-6; anal.cut2_si = 2.8E-6;
+	anal.cut1_a = 1.; anal.cut1_c = -2.0E-6; anal.cut1_si = 9.5E-6;
+	anal.cut2_a = 1.; anal.cut2_c = -0.8E-6; anal.cut2_si = 2.8E-6;
 	
 	anal.cut5_a = 0.107200; anal.cut5_c = -0.010; anal.cut5_si = 0.016;
 	anal.cut6_a = 0.105559; anal.cut6_c = -0.002; anal.cut6_si = 0.019;
 
-	anal.cut7_a = 168.; anal.cut7_c = +0.009; anal.cut7_si = 0.012;
+	anal.cut7_a = 168.; anal.cut7_c = +0.021; anal.cut7_si = 0.012;
 
 	anal.th_y_lcut_L = 28E-6; anal.th_y_lcut_R = 32E-6; anal.th_y_lcut = 34E-6;
 	anal.th_y_hcut_L = 104E-6; anal.th_y_hcut_R = 104E-6; anal.th_y_hcut = 102E-6;
@@ -136,13 +136,13 @@ void Init_45b_56t()
 void Init_45t_56b()
 {
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = -5.5E-6; anal.cut1_si = 10.0E-6;
-	anal.cut2_a = 1.; anal.cut2_c = +0.2E-6; anal.cut2_si = 2.8E-6;
+	anal.cut1_a = 1.; anal.cut1_c = -3.2E-6; anal.cut1_si = 10.0E-6;
+	anal.cut2_a = 1.; anal.cut2_c = -0.6E-6; anal.cut2_si = 2.8E-6;
 	
 	anal.cut5_a = 0.10671; anal.cut5_c = -0.009; anal.cut5_si = 0.018;
 	anal.cut6_a = 0.10564; anal.cut6_c = +0.006; anal.cut6_si = 0.018;
 
-	anal.cut7_a = 169.; anal.cut7_c = +0.014; anal.cut7_si = 0.012;
+	anal.cut7_a = 169.; anal.cut7_c = +0.021; anal.cut7_si = 0.012;
 
 	anal.th_y_lcut_L = 25.5E-6; anal.th_y_lcut_R = 27.2E-6; anal.th_y_lcut = 28.2E-6;
 	anal.th_y_hcut_L = 104E-6; anal.th_y_hcut_R = 104E-6; anal.th_y_hcut = 102E-6;
