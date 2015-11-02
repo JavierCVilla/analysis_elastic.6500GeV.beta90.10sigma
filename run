@@ -51,7 +51,7 @@ function RunOneDiagonal()
 	log="${tag}_${diag}.log_run"
 
 	echo "$label > running$optionsStr"
-	"./$exe_file" "$diag" $options &> "$log"
+	{ time "./$exe_file" "$diag" $options ; } &> "$log"
 	errCode="$?"
 	case "$errCode" in
 		0)
