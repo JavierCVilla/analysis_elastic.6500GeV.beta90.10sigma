@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 		return rcIncompatibleDiagonal;
 
 	// default parameters
-	unsigned int detailsLevel = 10; 	// 0: no details, 1: some details, >= 2 all details
+	unsigned int detailsLevel = 0; 	// 0: no details, 1: some details, >= 2 all details
 	bool overrideCutSelection = false;	// whether the default cut selection should be overriden by the command-line selection
 	string cutSelectionString;
 	string outputDir = ".";
@@ -403,12 +403,14 @@ int main(int argc, char **argv)
 	TH2D *h_y_R_2_N_vs_x_R_2_N_al_sel = new TH2D("h_y_R_2_N_vs_x_R_2_N_al_sel", ";x^{R,2,N};y^{R,2,N}", 100, -3., +3., 300, -30., +30.);
 	TH2D *h_y_R_2_F_vs_x_R_2_F_al_sel = new TH2D("h_y_R_2_F_vs_x_R_2_F_al_sel", ";x^{R,2,F};y^{R,2,F}", 100, -3., +3., 300, -30., +30.);
 
+	/*
 	TGraph *g_y_L_1_F_vs_x_L_1_F_al_sel = new TGraph(); g_y_L_1_F_vs_x_L_1_F_al_sel->SetName("g_y_L_1_F_vs_x_L_1_F_al_sel");
 	TGraph *g_y_L_2_N_vs_x_L_2_N_al_sel = new TGraph(); g_y_L_2_N_vs_x_L_2_N_al_sel->SetName("g_y_L_2_N_vs_x_L_2_N_al_sel");
 	TGraph *g_y_L_2_F_vs_x_L_2_F_al_sel = new TGraph(); g_y_L_2_F_vs_x_L_2_F_al_sel->SetName("g_y_L_2_F_vs_x_L_2_F_al_sel");
 	TGraph *g_y_R_1_F_vs_x_R_1_F_al_sel = new TGraph(); g_y_R_1_F_vs_x_R_1_F_al_sel->SetName("g_y_R_1_F_vs_x_R_1_F_al_sel");
 	TGraph *g_y_R_2_N_vs_x_R_2_N_al_sel = new TGraph(); g_y_R_2_N_vs_x_R_2_N_al_sel->SetName("g_y_R_2_N_vs_x_R_2_N_al_sel");
 	TGraph *g_y_R_2_F_vs_x_R_2_F_al_sel = new TGraph(); g_y_R_2_F_vs_x_R_2_F_al_sel->SetName("g_y_R_2_F_vs_x_R_2_F_al_sel");
+	*/
 
 	// book alignment histograms
 	map<signed int, TGraph *> g_y_L_1_F_vs_x_L_1_F_sel, g_y_L_2_N_vs_x_L_2_N_sel, g_y_L_2_F_vs_x_L_2_F_sel;
@@ -423,7 +425,7 @@ int main(int argc, char **argv)
 	// book cut histograms
 	map<unsigned int, TH1D *> h_cq;
 	map<unsigned int, TH2D *> h2_cq, h2_cq_full;
-	map<unsigned int, TGraph *> g_cq;
+	//map<unsigned int, TGraph *> g_cq;
 	map<unsigned int, TProfile *> p_cq, p_cq_time;
 	for (unsigned int i = 1; i <= anal.N_cuts; ++i)
 	{
@@ -446,12 +448,13 @@ int main(int argc, char **argv)
 		sprintf(name, "h2_cq%i", i); sprintf(title, ";%s;%s", anal.cqaN[i].c_str(), anal.cqbN[i].c_str()); h2_cq[i] = new TH2D(name, title, 100, x_min, x_max, 100, y_min, y_max);
 		sprintf(name, "h2_cq_full%i", i); sprintf(title, ";%s;%s", anal.cqaN[i].c_str(), anal.cqbN[i].c_str()); h2_cq_full[i] = new TH2D(name, title, 100, x_min, x_max, 100, y_min, y_max);
 
-		sprintf(name, "g_cq%i", i); sprintf(title, ";%s;%s", anal.cqaN[i].c_str(), anal.cqbN[i].c_str()); g_cq[i] = new TGraph(); g_cq[i]->SetName(name); g_cq[i]->SetTitle(title);
+		//sprintf(name, "g_cq%i", i); sprintf(title, ";%s;%s", anal.cqaN[i].c_str(), anal.cqbN[i].c_str()); g_cq[i] = new TGraph(); g_cq[i]->SetName(name); g_cq[i]->SetTitle(title);
 		sprintf(name, "p_cq%i", i); sprintf(title, ";%s;%s", anal.cqaN[i].c_str(), anal.cqbN[i].c_str()); p_cq[i] = new TProfile(name, title, 300, 0., 0.);
 		sprintf(name, "p_cq_time%i", i); sprintf(title, ";time   (s);mean of cq%i", i); p_cq_time[i] = new TProfile(name, title, 240, 6E3-0.5, 30E3+0.5);
 	}
 	
 	// book histograms for selected hits
+	/*
 	TProfile *p_x_vs_y_L_F = new TProfile("p_x_vs_y_L_F", ";y^{L,F};x^{L,F};", 50, 0., 0.);
 	TProfile *p_x_vs_y_L_N = new TProfile("p_x_vs_y_L_N", ";y^{L,N};x^{L,N};", 50, 0., 0.);
 	TProfile *p_x_vs_y_R_N = new TProfile("p_x_vs_y_R_N", ";y^{R,N};x^{R,N};", 50, 0., 0.);
@@ -467,6 +470,7 @@ int main(int argc, char **argv)
 
 	TH2D *h_y_L_ratioFN_vs_y_L_N = new TH2D("h_y_L_ratioFN_vs_y_L_N", ";y^{LN};y^{LF} / y^{LN}", 300, -30., +30., 300, 1.08, 1.14);
 	TH2D *h_y_R_ratioFN_vs_y_R_N = new TH2D("h_y_R_ratioFN_vs_y_R_N", ";y^{RN};y^{RF} / y^{RN}", 300, -30., +30., 300, 1.08, 1.14);
+	*/
 
 	// book angluar histograms
 	TH1D *th_x_diffLR = new TH1D("th_x_diffLR", ";#theta_{x}^{R} - #theta_{x}^{L}", 1000, -500E-6, +500E-6); th_x_diffLR->Sumw2();
@@ -525,7 +529,6 @@ int main(int argc, char **argv)
 	TH1D *h_ta_th_x_L = new TH1D("h_ta_th_x_L", ";#tau_{x}^{L} - #theta_{x}^{L}", 100, 0., 0.);
 	TH1D *h_ta_th_x = new TH1D("h_ta_th_x", ";#tau_{x} - #theta_{x}", 100, 0., 0.);
 	TH1D *h_ta_x_diffLR = new TH1D("h_ta_x_diffLR", ";#Delta^{R-L} #tau_{x}", 100, 0., 0.);
-	*/
 
 	TH1D *h_ta_y_R = new TH1D("h_ta_y_R", ";#tau_{y}^{R}", 100, -600E-6, +600E-6);
 	TH1D *h_ta_y_L = new TH1D("h_ta_y_L", ";#tau_{y}^{L}", 100, -600E-6, +600E-6);
@@ -538,6 +541,7 @@ int main(int argc, char **argv)
 	TProfile *h_ta_y_vs_th_y = new TProfile("h_ta_y_vs_th_y", ";#theta_{y};#tau_{y}", 100, -600E-6, +600E-6); h_ta_y_vs_th_y->SetLineColor(1);
 	TProfile *h_ta_y_L_vs_th_y_L = new TProfile("h_ta_y_L_vs_th_y_L", ";#theta_{y}^{L};#tau_{y}^{L}", 100, -600E-6, +600E-6); h_ta_y_L_vs_th_y_L->SetLineColor(2);
 	TProfile *h_ta_y_R_vs_th_y_R = new TProfile("h_ta_y_R_vs_th_y_R", ";#theta_{y}^{R};#tau_{y}^{R}", 100, -600E-6, +600E-6); h_ta_y_R_vs_th_y_R->SetLineColor(4);
+	*/
 
 	// vertex histograms
 	TH1D *h_vtx_x = new TH1D("h_vtx_x", ";x^{*}", 100, -0.5, +0.5); h_vtx_x->SetLineColor(1);
@@ -690,6 +694,7 @@ int main(int argc, char **argv)
 	TGraph *g_norm_corr_vs_div_corr = new TGraph(); g_norm_corr_vs_div_corr->SetName("g_norm_corr_vs_div_corr"); g_norm_corr_vs_div_corr->SetTitle(";div_corr;norm_corr");
 
 	// book background histograms
+	/*
 	map<unsigned int, TH1D *> hb_cq;
 	for (unsigned int ci = 1; ci <= anal.N_cuts; ++ci)
 	{
@@ -716,8 +721,10 @@ int main(int argc, char **argv)
 	
 	TH1D *hb_th_y_6cut = new TH1D("hb_th_y_6cut", ";|#theta_{y}|", 200, 0, 100E-6); hb_th_y_6cut->Sumw2();
 	TH1D *hb_th_y_6cut_cut7fail = new TH1D("hb_th_y_6cut_cut7fail", ";|#theta_{y}|", 100, 0, 100E-6); hb_th_y_6cut_cut7fail->Sumw2();
+	*/
 
 	// book histograms for optics matching
+	/*
 	TGraph *g_th_x_L_vs_th_x_R = new TGraph(); g_th_x_L_vs_th_x_R->SetName("g_th_x_L_vs_th_x_R"); g_th_x_L_vs_th_x_R->SetTitle(";#theta_{x}^{R};#theta_{x}^{L}");
 	TGraph *g_th_x_R_vs_th_x_L = new TGraph(); g_th_x_R_vs_th_x_L->SetName("g_th_x_R_vs_th_x_L"); g_th_x_R_vs_th_x_L->SetTitle(";#theta_{x}^{L};#theta_{x}^{R}");
 
@@ -741,6 +748,7 @@ int main(int argc, char **argv)
 	TProfile *p_y_F_L_vs_th_y_L = new TProfile("p_y_F_L_vs_th_y_L", ";#theta_{y}^{L};y^{F,L}", 100, 0., 0.);
 	TProfile *p_y_N_R_vs_th_y_R = new TProfile("p_y_N_R_vs_th_y_R", ";#theta_{y}^{R};y^{N,R}", 100, 0., 0.);
 	TProfile *p_y_F_R_vs_th_y_R = new TProfile("p_y_F_R_vs_th_y_R", ";#theta_{y}^{R};y^{F,R}", 100, 0., 0.);
+	*/
 
 	// zero counters
 	unsigned long n_ev_full = 0;
@@ -892,9 +900,10 @@ int main(int argc, char **argv)
 					reduced_select &= cd.ct[ci];
 			}
 
-			if (reduced_select) {
+			/*
+			if (reduced_select)
 				hb_cq[qi]->Fill(cd.cv[qi] / anal.csi[qi]);
-			}
+			*/
 		}
 
 		/*
@@ -1011,7 +1020,7 @@ int main(int argc, char **argv)
 		// data for alignment
 		// (SHOULD use hit positions WITHOUT alignment corrections, i.e. ev.h)
 		signed int period = int((ev.timestamp - anal.alignment_t0) / anal.alignment_ts);
-		if (detailsLevel >= 2)
+		if (detailsLevel >= 0)
 		{
 			if (g_w_vs_timestamp_sel.find(period) == g_w_vs_timestamp_sel.end())
 			{
@@ -1060,8 +1069,10 @@ int main(int argc, char **argv)
 			h_cq[ci]->Fill(cd.cv[ci]);
 			h2_cq[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
 			//h2_cq[ci]->Fill(ccb[ci]*cqa[ci] - cca[ci]*cqb[ci], cca[ci]*cqa[ci] + ccb[ci]*cqb[ci] + ccc[ci]);
+			/*
 			if (detailsLevel >= 2)
 				g_cq[ci]->SetPoint(g_cq[ci]->GetN(), cd.cqa[ci], cd.cqb[ci]);
+			*/
 			p_cq[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
 			p_cq_time[ci]->Fill(ev.timestamp, cd.cv[ci]);
 		}
@@ -1080,6 +1091,7 @@ int main(int argc, char **argv)
 		h_y_R_2_N_vs_x_R_2_N_al_sel->Fill(h_al.R_2_N.x, h_al.R_2_N.y);
 		h_y_R_2_F_vs_x_R_2_F_al_sel->Fill(h_al.R_2_F.x, h_al.R_2_F.y);
 
+		/*
 		{
 			int idx = g_y_L_1_F_vs_x_L_1_F_al_sel->GetN();
 			if (idx < 100000)
@@ -1092,6 +1104,7 @@ int main(int argc, char **argv)
 				g_y_R_2_F_vs_x_R_2_F_al_sel->SetPoint(idx, h_al.R_2_F.x, h_al.R_2_F.y);
 			}
 		}
+		*/
 
 		/*
 		p_x_vs_y_L_F->Fill(h_al.y_L_F, h_al.x_L_F);
@@ -1232,8 +1245,7 @@ int main(int argc, char **argv)
 		p_vtx_x_R_vs_th_x_R->Fill(k.th_x_R, k.vtx_x_R);
 		*/
 		
-
-
+		/*
 		if (detailsLevel >= 2)
 		{
 			g_th_x_L_vs_th_x_R->SetPoint(g_th_x_L_vs_th_x_R->GetN(), k.th_x_R, k.th_x_L);
@@ -1246,6 +1258,7 @@ int main(int argc, char **argv)
 
 		p_th_y_L_vs_th_y_R->Fill(k.th_y_R, k.th_y_L);
 		p_th_y_R_vs_th_y_L->Fill(k.th_y_L, k.th_y_R);	// duplicate
+		*/
 
 		/*
 		p_x_N_L_vs_x_N_R->Fill(h_al.x_R_N, h_al.x_L_N);
@@ -1273,11 +1286,11 @@ int main(int argc, char **argv)
 		p_x_R_F_vs_th_x_R->Fill(k.th_x_R, h_al.x_R_F);
 		*/
 		
-		p_th_x_R_vs_th_x_L->Fill(k.th_x_L, k.th_x_R);	
+		//p_th_x_R_vs_th_x_L->Fill(k.th_x_L, k.th_x_R);	
 		//p_th_y_R_vs_th_y_L->Fill(k.th_y_L, k.th_y_R);	
 
-		p_th_y_LF_vs_th_y_LN->Fill(k.th_y_L_N, k.th_y_L_F);
-		p_th_y_RF_vs_th_y_RN->Fill(k.th_y_R_N, k.th_y_R_F);
+		//p_th_y_LF_vs_th_y_LN->Fill(k.th_y_L_N, k.th_y_L_F);
+		//p_th_y_RF_vs_th_y_RN->Fill(k.th_y_R_N, k.th_y_R_F);
 
 		/*
 		double thl_y_L = (h_al.y_L_F - h_al.y_L_N) / d_RP;
@@ -1298,9 +1311,7 @@ int main(int argc, char **argv)
 		/*
 		h_ta_th_x->Fill(ta_x - k.th_x);
 		p_ta_th_x_vs_th_x->Fill(k.th_x, ta_x - k.th_x);
-		*/
 
-		/*
 		h_ta_y_R->Fill(ta_y_R);
 		h_ta_y_L->Fill(ta_y_L);
 
@@ -1455,10 +1466,12 @@ int main(int argc, char **argv)
 	
 	h_th_y_vs_th_x_normalized->Scale(1., "width");
 	
+	/*
 	hb_th_x_L->Scale(1., "width");
 	hb_th_x_R->Scale(1., "width");
 	hb_th_y_L->Scale(1., "width");
 	hb_th_y_R->Scale(1., "width");
+	*/
 	
 	th_y_diffLR->Scale(1., "width");
 	th_x_diffLR->Scale(1., "width");
@@ -1564,9 +1577,10 @@ int main(int argc, char **argv)
 	p_th_y_L_vs_time->Fit("pol1");
 
 	// double-gauss fit for background histograms
+	/*
 	//TF1 *dg = new TF1("dg", "[0]*exp(-(x-[1])*(x-[1])/2/[2]/[2]) + [3]*exp(-(x-[4])*(x-[4])/2/[5]/[5])");
-	for (map<unsigned int, TH1D *>::iterator it = hb_cq.begin(); it != hb_cq.end(); ++it) {
-		/*
+	for (map<unsigned int, TH1D *>::iterator it = hb_cq.begin(); it != hb_cq.end(); ++it)
+	{
 		printf("* Fitting background projection %u\n", it->first);
 		dg->SetParameters(5E3, 0., 1., 1E2, 0., 3.);
 		it->second->Fit(dg, "", "", -9., +9.);
@@ -1580,9 +1594,10 @@ int main(int argc, char **argv)
 		printf("\tbackground int = %E\n", background_int);
 		printf("\tsignal + background int = %E\n", signal_int + background_int);
 		printf("\tbackground/signal = %E\n", background_int / signal_int);
-		*/
 	}
+	*/
 	
+	/*
 	printf("* fitting p_x_vs_y_L_F\n");
 	p_x_vs_y_L_F->Fit("pol1", "", "", -15., +15.);
 	printf("* fitting p_x_vs_y_L_N\n");
@@ -1591,6 +1606,7 @@ int main(int argc, char **argv)
 	p_x_vs_y_R_N->Fit("pol1", "", "", -15., +15.);
 	printf("* fitting p_x_vs_y_R_F\n");
 	p_x_vs_y_R_F->Fit("pol1", "", "", -15., +15.);
+	*/
 	
 	th_y_diffLR_safe->Fit("gaus");
 	th_x_diffLR_safe->Fit("gaus");
@@ -1678,12 +1694,14 @@ int main(int argc, char **argv)
 	h_y_R_2_N_vs_x_R_2_N_al_sel->Write();
 	h_y_R_2_F_vs_x_R_2_F_al_sel->Write();
 
+	/*
 	g_y_L_2_F_vs_x_L_2_F_al_sel->Write();
 	g_y_L_2_N_vs_x_L_2_N_al_sel->Write();
 	g_y_L_1_F_vs_x_L_1_F_al_sel->Write();
 	g_y_R_1_F_vs_x_R_1_F_al_sel->Write();
 	g_y_R_2_N_vs_x_R_2_N_al_sel->Write();
 	g_y_R_2_F_vs_x_R_2_F_al_sel->Write();
+	*/
 
 	TDirectory *alDir = outF->mkdir("alignment");
 
@@ -1795,7 +1813,7 @@ int main(int argc, char **argv)
 		h_cq[ci]->Write();
 		h2_cq[ci]->Write();
 		h2_cq_full[ci]->Write();
-		g_cq[ci]->Write();
+		//g_cq[ci]->Write();
 
 		p_cq[ci]->Write();
 
@@ -1836,6 +1854,7 @@ int main(int argc, char **argv)
 	}
 
 	gDirectory = outF->mkdir("selected - hits");
+	/*
 	p_x_vs_y_L_F->Write();
 	p_x_vs_y_L_N->Write();
 	p_x_vs_y_R_N->Write();
@@ -1851,6 +1870,7 @@ int main(int argc, char **argv)
 
 	h_y_L_ratioFN_vs_y_L_N->Write();
 	h_y_R_ratioFN_vs_y_R_N->Write();
+	*/
 	
 	gDirectory = outF->mkdir("selected - angles");
 	th_x_diffLR->Write();
@@ -1889,14 +1909,14 @@ int main(int argc, char **argv)
 	g_th_y_vs_th_x->Write();
 	
 	h_th_y_L_vs_th_y_R->Write();
-	g_th_y_L_vs_th_y_R->Write();
+	//g_th_y_L_vs_th_y_R->Write();
 
 	if (detailsLevel > 2)
 	{
 		c = new TCanvas();
 		c->SetLogz(1);
 		h_th_y_L_vs_th_y_R->Draw("colz");
-		g_th_y_L_vs_th_y_R->Draw("p");
+		//g_th_y_L_vs_th_y_R->Draw("p");
 		c->Write("canvas_th_y_L_vs_th_y_R");
 	}
 	
@@ -1923,14 +1943,13 @@ int main(int argc, char **argv)
 		g->Write();
 	}
 
+	/*
 	gDirectory = outF->mkdir("selected - angles, alternative");
 
-	/*
 	h_ta_th_x_R->Write();
 	h_ta_th_x_L->Write();
 	h_ta_th_x->Write();
 	h_ta_x_diffLR->Write();
-	*/
 
 	h_ta_y_R->Write();
 	h_ta_y_L->Write();
@@ -1943,6 +1962,7 @@ int main(int argc, char **argv)
 	h_ta_y_vs_th_y->Write();
 	h_ta_y_L_vs_th_y_L->Write();
 	h_ta_y_R_vs_th_y_R->Write();
+	*/
 	
 	gDirectory = outF->mkdir("selected - vertex");
 	h_vtx_x->Write();
@@ -2144,6 +2164,7 @@ int main(int argc, char **argv)
 		bh_t_normalized_unsmeared_rel_diff[bi]->Write();
 	}
 
+	/*
 	gDirectory = outF->mkdir("background");
 	for (map<unsigned int, TH1D *>::iterator it = hb_cq.begin(); it != hb_cq.end(); ++it)
 		it->second->Write();
@@ -2193,8 +2214,9 @@ int main(int argc, char **argv)
 		hb_th_y_6cut_cut7failRatio->Divide(hb_th_y_6cut);
 		hb_th_y_6cut_cut7failRatio->Write();
 	}
+	*/
 	
-	
+	/*
 	gDirectory = outF->mkdir("matching input");
 	g_th_x_L_vs_th_x_R->Write();
 	g_th_x_R_vs_th_x_L->Write();
@@ -2224,6 +2246,7 @@ int main(int argc, char **argv)
 	p_x_vs_y_L_N->Write();
 	p_x_vs_y_R_N->Write();
 	p_x_vs_y_R_F->Write();
+	*/
 
 	// print counters
 	for (map<unsigned int, unsigned long>::iterator it = n_ev_cut.begin(); it != n_ev_cut.end(); ++it)
