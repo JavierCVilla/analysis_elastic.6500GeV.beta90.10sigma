@@ -3,7 +3,7 @@
 #include <map>
 #include <cmath>
 
-double timestamp0 = 1444946400;
+double timestamp0 = 1444860000;
 
 vector<AlignmentSource> alignmentSources;
 Analysis anal;
@@ -84,13 +84,13 @@ void Init_base()
 	anal.alignment_t0 = 83000.;		// beginning of the first time-slice
 	anal.alignment_ts = 5.*60.;		// time-slice in s
 	
-	anal.alignmentYRanges["L_2_F"] = Analysis::AlignmentYRange(-22.0, -10.0, 9.0, 22.0);
-	anal.alignmentYRanges["L_2_N"] = Analysis::AlignmentYRange(-20.0, - 9.0, 8.4, 20.0);
-	anal.alignmentYRanges["L_1_F"] = Analysis::AlignmentYRange(-19.3, - 8.8, 8.0, 19.6);
+	anal.alignmentYRanges["L_2_F"] = Analysis::AlignmentYRange(-22.0, -10.4, 9.0, 22.0);
+	anal.alignmentYRanges["L_2_N"] = Analysis::AlignmentYRange(-20.0, - 9.4, 8.4, 20.0);
+	anal.alignmentYRanges["L_1_F"] = Analysis::AlignmentYRange(-19.3, - 9.2, 8.0, 19.6);
 
 	anal.alignmentYRanges["R_1_F"] = Analysis::AlignmentYRange(-20.0, - 7.4, 8.0, 20.0);
 	anal.alignmentYRanges["R_2_N"] = Analysis::AlignmentYRange(-20.5, - 7.6, 8.4, 20.8);
-	anal.alignmentYRanges["R_2_F"] = Analysis::AlignmentYRange(-23.0, - 8.2, 9.2, 24.0);
+	anal.alignmentYRanges["R_2_F"] = Analysis::AlignmentYRange(-23.0, - 8.6, 9.2, 24.0);
 
 #if 0
 	// TODO
@@ -109,13 +109,13 @@ void Init_base()
 void Init_45b_56t()
 {
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = -3.1E-6; anal.cut1_si = 9.5E-6;
-	anal.cut2_a = 1.; anal.cut2_c = -0.6E-6; anal.cut2_si = 2.8E-6;
+	anal.cut1_a = 1.; anal.cut1_c = +0.13E-6; anal.cut1_si = 9.5E-6;
+	anal.cut2_a = 1.; anal.cut2_c = +0.02E-6; anal.cut2_si = 2.8E-6;
 	
 	anal.cut5_a = 0.107200; anal.cut5_c = -0.010; anal.cut5_si = 0.016;
 	anal.cut6_a = 0.105559; anal.cut6_c = -0.002; anal.cut6_si = 0.019;
 
-	anal.cut7_a = 168.; anal.cut7_c = +0.011; anal.cut7_si = 0.012;
+	anal.cut7_a = 168.; anal.cut7_c = 0.; anal.cut7_si = 0.012;
 
 	anal.th_y_lcut_L = 28E-6; anal.th_y_lcut_R = 32E-6; anal.th_y_lcut = 34E-6;
 	anal.th_y_hcut_L = 104E-6; anal.th_y_hcut_R = 104E-6; anal.th_y_hcut = 102E-6;
@@ -136,13 +136,13 @@ void Init_45b_56t()
 void Init_45t_56b()
 {
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = +3.850E-6; anal.cut1_si = 10.0E-6;
-	anal.cut2_a = 1.; anal.cut2_c = -0.40E-6; anal.cut2_si = 2.8E-6;
+	anal.cut1_a = 1.; anal.cut1_c = +0.17E-6; anal.cut1_si = 10.0E-6;
+	anal.cut2_a = 1.; anal.cut2_c = +0.22E-6; anal.cut2_si = 2.8E-6;
 	
 	anal.cut5_a = 0.10671; anal.cut5_c = -0.009; anal.cut5_si = 0.018;
 	anal.cut6_a = 0.10564; anal.cut6_c = +0.006; anal.cut6_si = 0.018;
 
-	anal.cut7_a = 169.; anal.cut7_c = +0.010; anal.cut7_si = 0.012;
+	anal.cut7_a = 169.; anal.cut7_c = 0.; anal.cut7_si = 0.012;
 
 	anal.th_y_lcut_L = 25.5E-6; anal.th_y_lcut_R = 27.2E-6; anal.th_y_lcut = 28.2E-6;
 	anal.th_y_hcut_L = 104E-6; anal.th_y_hcut_R = 104E-6; anal.th_y_hcut = 102E-6;

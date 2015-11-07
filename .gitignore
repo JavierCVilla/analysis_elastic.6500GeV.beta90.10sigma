@@ -6,3 +6,7 @@
 
 alignment/print_fit
 alignment/test_linearity
+
+DS-merged/merge
+
+*/alignment_fit.out

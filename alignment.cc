@@ -18,6 +18,7 @@
 #include <map>
 #include <cmath>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 
@@ -278,7 +279,7 @@ bool operator< (entry &e1, entry &e2)
 //----------------------------------------------------------------------------------------------------
 
 void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
-	const Analysis::AlignmentYRange &r, double s_exp,
+	const Analysis::AlignmentYRange &r, double c_exp,
 	map<string, map<signed int, result> > &results, signed int period)
 {
 	printf(">> DoVerticalAlignment\n");
@@ -374,11 +375,14 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 	//sort(sample_b.begin(), sample_b.end());
 
 	// determine shift range
-	//double de_w = (y_max_t - y_min_t) - (y_max_b - y_min_b);
-	//double s_min = min(0., de_w), s_max = max(0., de_w);
 	//double s_min = -2.0, s_max = 2.0;
-	double s_min = s_exp - 0.35, s_max = s_exp + 0.35;
-	double s_step = 0.05;
+	//double s_step = 0.2;
+	
+	double s_exp = 2. * c_exp + y_min_b - y_min_t;
+	double s_min = s_exp - 0.3, s_max = s_exp + 0.3;
+	//double s_step = 0.1;
+	double s_step = 0.02;
+
 	printf("\tshift range: %.2E to %.2E, shift step = %.2E\n", s_min, s_max, s_step);
 
 	// result variables
@@ -420,7 +424,8 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 		{
 			double y = sample_t[i].v;
 			double w = sample_t[i].w;
-			if (y >= y_min && y < y_max) {
+			if (y >= y_min && y < y_max)
+			{
 				//printf("y1: %E\n", y);
 				m_t[y] += w;
 				norm_t += w;
@@ -450,19 +455,20 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 		TH1D *y_hist_t = new TH1D("y_hist_t", "", N_bins, y_min, y_max);
 		y_hist_t->Sumw2();
 		for (map<double, double>::iterator it = m_t.begin(); it != m_t.end(); ++it)
-			y_hist_t->Fill(it->first, double(it->second));
+			y_hist_t->Fill(it->first, it->second);
 		y_hist_t->SetLineColor(2);
 
 		TH1D *y_hist_b = new TH1D("y_hist_b", "", N_bins, y_min, y_max);
 		y_hist_b->Sumw2();
 		for (map<double, double>::iterator it = m_b.begin(); it != m_b.end(); ++it)
-			y_hist_b->Fill(it->first, double(it->second));
+			y_hist_b->Fill(it->first, it->second);
 		y_hist_b->SetLineColor(4);
 		
 		// calculate histogram chi^2
 		double hist_chi_sq = 0.;
 		int hist_n = 0;
-		for (int i = 1; i <= y_hist_t->GetNbinsX(); i++) {
+		for (int i = 1; i <= y_hist_t->GetNbinsX(); i++)
+		{
 			double diff = y_hist_t->GetBinContent(i) - y_hist_b->GetBinContent(i);
 			double eff_err_sq = pow(y_hist_t->GetBinError(i), 2.) + pow(y_hist_b->GetBinError(i), 2.);
 			if (eff_err_sq <= 0)
@@ -495,12 +501,14 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 			TGraph *g_y_cumul_t = new TGraph(); g_y_cumul_t->SetLineColor(2);
 			TGraph *g_y_cumul_b = new TGraph(); g_y_cumul_b->SetLineColor(4);
 			double sum = 0.;
-			for (int i = 1; i <= y_hist_t->GetNbinsX(); i++) {
+			for (int i = 1; i <= y_hist_t->GetNbinsX(); i++)
+			{
 				sum += y_hist_t->GetBinContent(i);
 				g_y_cumul_t->SetPoint(g_y_cumul_t->GetN(), y_hist_t->GetBinCenter(i), sum);
 			}
 			sum = 0.;
-			for (int i = 1; i <= y_hist_b->GetNbinsX(); i++) {
+			for (int i = 1; i <= y_hist_b->GetNbinsX(); i++)
+			{
 				sum += y_hist_b->GetBinContent(i);
 				g_y_cumul_b->SetPoint(g_y_cumul_b->GetN(), y_hist_b->GetBinCenter(i), sum);
 			}
@@ -521,26 +529,27 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 		vector<double> S_t;
 		S_t.reserve(m_t.size());
 		S_t.push_back(0.);
-		TGraph *g_t = new TGraph();
+		//TGraph *g_t = new TGraph();
 		for (map<double, double>::iterator it = m_t.begin(); it != m_t.end(); ++it)
 		{
-			sum += double(it->second);
+			sum += it->second;
 			S_t.push_back(sum);
-			g_t->SetPoint(g_t->GetN(), it->first, sum);
+			//g_t->SetPoint(g_t->GetN(), it->first, sum);
 		}
 		
 		vector<double> S_b;
 		S_b.reserve(m_b.size());
 		S_b.push_back(0.);
-		TGraph *g_b = new TGraph();
+		//TGraph *g_b = new TGraph();
 		sum = 0.;
 		for (map<double, double>::iterator it = m_b.begin(); it != m_b.end(); ++it)
 		{
-			sum += double(it->second);
+			sum += it->second;
 			S_b.push_back(sum);
 			g_b->SetPoint(g_b->GetN(), it->first, sum);
 		}
 
+		/*
 		if (saveDetails || saveExtra)
 		{
 			TCanvas *c = new TCanvas();
@@ -552,21 +561,46 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 			c->Write();	
 			delete c;
 		}
+		*/
 
 		// build sorted array of all increase points
-		map<double, unsigned int> ipa;
-		for (map<double, double>::iterator it = m_t.begin(); it != m_t.end(); ++it)
-			ipa[it->first] += 1;
-		for (map<double, double>::iterator it = m_b.begin(); it != m_b.end(); ++it)
-			ipa[it->first] += 2;
+		vector< pair<double, unsigned int> > ipa;
+		map<double, double>::iterator it_t = m_t.begin();
+		map<double, double>::iterator it_b = m_b.begin();
+
+		while (it_t != m_t.end() && it_b != m_b.end())
+		{
+			if (it_t == m_t.end())
+			{
+				ipa.push_back({it_b->first, 2});
+				++it_b;
+				continue;
+			}
+
+			if (it_b == m_b.end())
+			{
+				ipa.push_back({it_t->first, 1});
+				++it_t;
+				continue;
+			}
+
+			if (it_t->first < it_b->first)
+			{
+				ipa.push_back({it_t->first, 1});
+				++it_t;
+			} else {
+				ipa.push_back({it_b->first, 2});
+				++it_b;
+			}
+		}
 
 		// find the maximum vertical difference and sum of squares of vertical differences
 		unsigned int idx_t = 0, idx_b = 0;
 		double max_diff = 0.;
 		double sum_diff_sq = 0.;
 		unsigned int n_diff = 0;
-		TGraphErrors *g_F_diff = new TGraphErrors(); g_F_diff->SetName("g_F_diff"); g_F_diff->SetLineColor(6);
-		for (map<double, unsigned int>::iterator it = ipa.begin(); it != ipa.end(); ++it)
+		//TGraphErrors *g_F_diff = new TGraphErrors(); g_F_diff->SetName("g_F_diff"); g_F_diff->SetLineColor(6);
+		for (vector< pair<double, unsigned int> >::iterator it = ipa.begin(); it != ipa.end(); ++it)
 		{
 			unsigned int num = it->second;
 			double y = it->first;
@@ -598,15 +632,18 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 
 			sum_diff_sq += pow(v_b - v_t, 2.) / (si_sq_t + si_sq_b);
 
+			/*
 			int idx = g_F_diff->GetN();
 			g_F_diff->SetPoint(idx, y, v_b - v_t);
 			g_F_diff->SetPointError(idx, 0., sqrt(si_sq_t + si_sq_b));
 			//printf("\t\t\tnum=%u, idx_t=%u, idx_b=%u | x=%E | v_t=%E, v_b=%E, diff=%E, max_diff after=%E\n", num, idx_t, idx_b, x, v_t, v_b, diff, max_diff);
+			*/
 		}
 
+		/*
 		if (saveDetails || saveExtra)
 			g_F_diff->Write();
-
+		*/
 
 		//double kCorr = sqrt(double(norm_t) * double(norm_b) / (norm_t + norm_b));
 		double kCorr = sqrt(double(norm_m) / 2.);
@@ -614,23 +651,27 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 		double z = max_diff * kCorr;
 		double prob = TMath::KolmogorovProb(z);
 
-		if (n_diff > 0) {
+		if (n_diff > 0)
+		{
 			//double mean_diff_sq = sum_diff_sq / n_diff;
 			double mean_diff_sq = sum_diff_sq;
 			g_mean_diff_sq->SetPoint(g_mean_diff_sq->GetN(), sh, mean_diff_sq);
 		}
 
-		if (norm_t > 0 && norm_b > 0) {
+		if (norm_t > 0 && norm_b > 0)
+		{
 			g_prob->SetPoint(g_prob->GetN(), sh, prob);
 			g_z->SetPoint(g_z->GetN(), sh, z);
 			g_max_diff->SetPoint(g_max_diff->GetN(), sh, max_diff);
 
-			if (min_diff > max_diff) {
+			if (min_diff > max_diff)
+			{
 				min_diff = max_diff;
 				bsh_min_diff = sh;
 			}
 	
-			if (max_prob < prob) {
+			if (max_prob < prob)
+			{
 				max_prob = prob;
 				bsh_prob = sh;
 			}
@@ -641,9 +682,9 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 		// clean
 		delete y_hist_t;
 		delete y_hist_b;
-		delete g_t;
-		delete g_b;
-		delete g_F_diff;
+		//delete g_t;
+		//delete g_b;
+		//delete g_F_diff;
 	}
 
 	// evaluate best shifts
@@ -697,6 +738,7 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 //----------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------
 
+/*
 void DoVerticalRelNFAlignment(TGraph *g_t_n, TGraph *g_t_f, TGraph *g_b_n, TGraph *g_b_f)
 {
 	printf(">> DoVerticalRelNFAlignment\n");
@@ -731,6 +773,7 @@ void DoVerticalRelNFAlignment(TGraph *g_t_n, TGraph *g_t_f, TGraph *g_b_n, TGrap
 	printf("\ta = %.2f +- %.2f mrad\n", ff->GetParameter(1)*1E3, ff->GetParError(1)*1E3);
 	printf("\tb = %.1f +- %.1f um\n", ff->GetParameter(0)*1E3, ff->GetParError(0)*1E3);
 }
+*/
 
 //----------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------
@@ -755,14 +798,14 @@ int main(int argc, char **argv)
 	char buf[1000];
 
 	vector<string> units;
-	vector<double> sExp;
-	units.push_back("L_2_F"); sExp.push_back(+1.0);
-	units.push_back("L_2_N"); sExp.push_back(+0.6);
-	units.push_back("L_1_F"); sExp.push_back(+0.7);
+	vector<double> deYExp;	// expected value of de_y in mm
+	units.push_back("L_2_F"); deYExp.push_back(0.);
+	units.push_back("L_2_N"); deYExp.push_back(0.);
+	units.push_back("L_1_F"); deYExp.push_back(0.);
 
-	units.push_back("R_1_F"); sExp.push_back(-0.6);
-	units.push_back("R_2_N"); sExp.push_back(-0.8);
-	units.push_back("R_2_F"); sExp.push_back(-1.0);
+	units.push_back("R_1_F"); deYExp.push_back(0.);
+	units.push_back("R_2_N"); deYExp.push_back(0.);
+	units.push_back("R_2_F"); deYExp.push_back(0.);
 
 	// get list of periods
 	vector<signed int> periods;
@@ -781,6 +824,10 @@ int main(int argc, char **argv)
 
 	for (unsigned int pi = 0; pi < periods.size(); pi++)
 	{
+		// TODO: remove
+		//if (pi > 2)
+		//	break;
+
 		printf("\n\n************************************************** period %i **************************************************\n", periods[pi]);
 		sprintf(buf, "period %i", periods[pi]);
 		TDirectory *perDir = outF->mkdir(buf);
@@ -795,6 +842,12 @@ int main(int argc, char **argv)
 			TGraph *gw_t = (TGraph *) inF_45t->Get((string(buf)+"g_w_vs_timestamp_sel").c_str());
 			TGraph *g_b = (TGraph *) inF_45b->Get((string(buf)+"g_y_"+units[ui]+"_vs_x_"+units[ui]+"_sel").c_str());
 			TGraph *gw_b = (TGraph *) inF_45b->Get((string(buf)+"g_w_vs_timestamp_sel").c_str());
+			
+			if (g_t == NULL || gw_t == NULL || g_b == NULL || gw_b == NULL)
+			{
+				printf("ERROR: missing input g_t = %p, gw_t = %p, g_b = %p, gw_b = %p\n", g_t, gw_t, g_b, gw_b);
+				continue;
+			}
 	
 			if (units[ui][0] == 'R')
 			{
@@ -820,7 +873,7 @@ int main(int argc, char **argv)
 			DoHorizontalAlignment(g_t, g_b, r, results[units[ui]], periods[pi]);
 			
 			gDirectory = unitDir->mkdir("vertical");
-			DoVerticalAlignment(g_t, gw_t, g_b, gw_b, r, sExp[ui], results[units[ui]], periods[pi]);
+			DoVerticalAlignment(g_t, gw_t, g_b, gw_b, r, deYExp[ui], results[units[ui]], periods[pi]);
 		}
 	
 		/*

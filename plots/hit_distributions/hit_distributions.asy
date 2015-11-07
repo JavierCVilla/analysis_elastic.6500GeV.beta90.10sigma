@@ -5,14 +5,16 @@ string topDir = "../../";
 
 TH2_palette = Gradient(blue, heavygreen, yellow, red);
 
-string file_45b = topDir + "DS2/distributions_45b_56t.root";
-string file_45t = topDir + "DS2/distributions_45t_56b.root";
+string file_45b = topDir + "DS4/distributions_45b_56t.root";
+string file_45t = topDir + "DS4/distributions_45t_56b.root";
 
 string rps[] = { "L_2_F", "L_2_N", "L_1_F", "R_1_F", "R_2_N", "R_2_F" };
 string rp_labels[] = { "left, 220, far", "left, 220, near", "left, 210, near", "right, 210, far", "right, 220, near", "right, 220, far" };
 
-real sh_top[] = { 5.3, 5.0, 5.2, 3.6, 5.6, 4.9 };
-real sh_bot[] = { -5.3, -5.0, -5.0, -6.5, -6.4, -6.1 };
+real sh_top[] = { 6.6, 6.0, 5.7,     7.2, 7.5, 8.2 };
+real sh_bot[] = { -6.8, -6.4, -6.2, -6.3, -6.4, -7.1 };
+
+drawGridDef = true;
 
 //----------------------------------------------------------------------------------------------------
 
@@ -78,7 +80,10 @@ for (int ri : rps.keys) {
 	NewPad("$x\ung{mm}$", "$y\ung{mm}$", 6cm, 10cm);
 	scale(Linear, Linear, Log);
 
-	TH2_z_max = log10(6e2);
+	//TH2_z_max = log10(6e2);
+
+	//draw(rGetObj(file_45b, "hit distributions/vertical, aligned, before selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_nosel"), "p,bar");
+	//draw(rGetObj(file_45t, "hit distributions/vertical, aligned, before selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_nosel"), "p");
 	
 	draw(rGetObj(file_45b, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "p,bar");
 	draw(rGetObj(file_45t, "hit distributions/vertical, aligned, after selection/h_y_"+rps[ri]+"_vs_x_"+rps[ri]+"_al_sel"), "p");
@@ -86,15 +91,10 @@ for (int ri : rps.keys) {
 	draw(shift(0, sh_top[ri])*det_shape);
 	draw(shift(0, sh_bot[ri])*scale(1, -1)*det_shape);
 
+	//draw(shift(6.2, 0)*rotate(-90)*det_shape);
+
 	limits((-30, -50), (+30, +50), Crop);
-	//limits((-30, -7), (+30, +7), Crop);
-
-	for (real x = -30; x <= +30; x += 5)
-		yaxis(XEquals(x, false), dotted+gray);
-
-	for (real y = -50; y <= +50; y += 5)
-		xaxis(YEquals(y, false), dotted+gray);
-
+	//limits((-30, -9), (+30, +9), Crop);
 
 	AttachLegend(replace(rp_labels[ri], "_", "\_"));
 }
