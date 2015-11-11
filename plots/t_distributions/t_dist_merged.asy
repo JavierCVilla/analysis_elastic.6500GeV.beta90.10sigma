@@ -25,7 +25,7 @@ for (int dgni : diagonals.keys)
 	draw(rGetObj(topDir+"DS-merged/merged.root", "eb/merged/" + diagonals[dgni] + "/h_dsdt"),
 		"d0,eb", p);
 
-	limits((0, 1e1), (3.5, 1e9), Crop);
+	limits((0, 1e1), (3, 1e9), Crop);
 	AttachLegend(diagLabels[dgni]);
 }
 
