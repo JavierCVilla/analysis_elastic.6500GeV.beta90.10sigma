@@ -20,9 +20,18 @@ using namespace std;
 int main(int argc, char **argv)
 {
 	if (argc != 2)
+	{
+		printf("ERROR: missing argument (diagonal).\n");
 		return 1;
+	}
 
 	Init(argv[1]);
+	if (diagonal == dUnknown)
+	{
+		printf("ERROR: unknown diagonal %s\n", argv[1]);
+		return 1;
+	}
+
 	if (diagonal == dCombined)
 		return rcIncompatibleDiagonal;
 
