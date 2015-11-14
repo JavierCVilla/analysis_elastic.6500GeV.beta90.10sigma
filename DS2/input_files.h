@@ -38,7 +38,6 @@ void InitInputFiles()
 	*/
 
 	std::string prefix = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4496/";
-
 	input_files.push_back(prefix + "TotemNTuple_9893.000.ntuple.root");
 	input_files.push_back(prefix + "TotemNTuple_9893.001.ntuple.root");
 	input_files.push_back(prefix + "TotemNTuple_9893.002.ntuple.root");
@@ -91,4 +90,29 @@ void InitInputFiles()
 	input_files.push_back(prefix + "TotemNTuple_9896.021.ntuple.root");
 	input_files.push_back(prefix + "TotemNTuple_9896.022.ntuple.root");
 	input_files.push_back(prefix + "TotemNTuple_9896.023.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.000.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.001.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.002.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.003.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.004.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.005.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.006.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.007.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.008.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.009.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.010.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.011.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.012.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.013.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.014.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.015.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.016.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.017.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.018.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.019.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.020.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.021.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.022.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.023.ntuple.root");
+	input_files.push_back(prefix + "TotemNTuple_9898.024.ntuple.root");
 }
