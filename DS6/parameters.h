@@ -5,6 +5,10 @@
 
 double timestamp0 = 1444860000;
 
+string storageDir;
+
+vector<string> distilledNtuples;
+
 vector<AlignmentSource> alignmentSources;
 Analysis anal;
 Environment env;
@@ -16,6 +20,13 @@ string luminosity_data_file;
 
 void Init_base()
 {
+	// directory for large-data storage (e.g. distilled ntuples)
+	storageDir = "root://eostotem.cern.ch//eos/totem/user/j/jkaspar/analyses/elastic/6500GeV,beta90,10sigma/DS6/";
+
+	// list of subdirectories with distilled ntuples
+	distilledNtuples.push_back("block1");
+	distilledNtuples.push_back("block2");
+
 	// selection of bunches
 	keepAllBunches = true;
 	//bunchMap[94882].push_back(0);

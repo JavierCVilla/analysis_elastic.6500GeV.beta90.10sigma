@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 	*/
 
 	// ouput file
-	TFile *outF = new TFile((string("distill_") + argv[1] + "_new.root").c_str(), "recreate");
+	TFile *outF = TFile::Open((storageDir + "/distill_" + argv[1] + ".root").c_str(), "recreate");
 
 	// set up output tree
 	EventRed ev;
@@ -152,8 +152,13 @@ int main(int argc, char **argv)
 
 	// loop over the chain entries
 	long int evi = 0;
+	long int nDistilledEvents = 0;
 	for (; evi < ch->GetEntries(); evi++)
 	{
+		// TODO: remove
+		if (evi > 150)
+			break;
+
 		ch->GetEvent(evi);
 
 		ev.h.L_1_F.v = rp_L_1_F->valid; ev.h.L_1_F.x = rp_L_1_F->x; ev.h.L_1_F.y = rp_L_1_F->y;
@@ -164,7 +169,6 @@ int main(int argc, char **argv)
 		ev.h.R_2_N.v = rp_R_2_N->valid; ev.h.R_2_N.x = rp_R_2_N->x; ev.h.R_2_N.y = rp_R_2_N->y;
 		ev.h.R_2_F.v = rp_R_2_F->valid; ev.h.R_2_F.x = rp_R_2_F->x; ev.h.R_2_F.y = rp_R_2_F->y;
 
-		/*
 		unsigned N_L = 0;
 		if (ev.h.L_1_F.v) N_L++;
 		if (ev.h.L_2_N.v) N_L++;
@@ -174,11 +178,12 @@ int main(int argc, char **argv)
 		if (ev.h.R_1_F.v) N_R++;
 		if (ev.h.R_2_N.v) N_R++;
 		if (ev.h.R_2_F.v) N_R++;
-		*/
 
-		bool save = (ev.h.L_2_N.v && ev.h.L_2_F.v && ev.h.R_2_N.v && ev.h.R_2_F.v);
+		bool save = (N_L >= 2 && N_R >= 2);
 		if (!save)
 			continue;
+
+		nDistilledEvents++;
 
 		ev.timestamp = metaData->timestamp - timestamp0;
 		ev.run_num = metaData->run_no;
@@ -189,7 +194,11 @@ int main(int argc, char **argv)
 
 		outT->Fill();
 	}
+
 	printf(">> last event number: %li\n", evi);
+
+	printf("\n");
+	printf(">> distilled events: %li\n", nDistilledEvents);
 
 	// save output tree
 	outT->Write();

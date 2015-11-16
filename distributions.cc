@@ -274,27 +274,37 @@ int main(int argc, char **argv)
 	binnings.push_back("ub");
 	binnings.push_back("eb");
 
-	// init files
-	TFile *inF = new TFile((inputDir + "/distill_" + argv[1] + ".root").c_str());
-	TFile *outF = new TFile((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
+	// get input
+	TChain *ch_in = new TChain("distilled");
+	printf(">> input chain\n");
+	for (const auto &ntupleDir : distilledNtuples)
+	{
+		string f = storageDir + "/" + ntupleDir + "/distill_" + argv[1] + ".root";
+		printf("+ %s\n", f.c_str());
+		ch_in->Add(f.c_str());
+	}
+	printf("%lu entries\n", ch_in->GetEntries());
+
+
+	// init output file
+	TFile *outF = TFile::Open((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
 
 	// get input data
-	TTree *inT = (TTree *) inF->Get("distilled");
 	EventRed ev;
-	inT->SetBranchAddress("v_L_1_F", &ev.h.L_1_F.v); inT->SetBranchAddress("x_L_1_F", &ev.h.L_1_F.x); inT->SetBranchAddress("y_L_1_F", &ev.h.L_1_F.y);
-	inT->SetBranchAddress("v_L_2_N", &ev.h.L_2_N.v); inT->SetBranchAddress("x_L_2_N", &ev.h.L_2_N.x); inT->SetBranchAddress("y_L_2_N", &ev.h.L_2_N.y);
-	inT->SetBranchAddress("v_L_2_F", &ev.h.L_2_F.v); inT->SetBranchAddress("x_L_2_F", &ev.h.L_2_F.x); inT->SetBranchAddress("y_L_2_F", &ev.h.L_2_F.y);
+	ch_in->SetBranchAddress("v_L_1_F", &ev.h.L_1_F.v); ch_in->SetBranchAddress("x_L_1_F", &ev.h.L_1_F.x); ch_in->SetBranchAddress("y_L_1_F", &ev.h.L_1_F.y);
+	ch_in->SetBranchAddress("v_L_2_N", &ev.h.L_2_N.v); ch_in->SetBranchAddress("x_L_2_N", &ev.h.L_2_N.x); ch_in->SetBranchAddress("y_L_2_N", &ev.h.L_2_N.y);
+	ch_in->SetBranchAddress("v_L_2_F", &ev.h.L_2_F.v); ch_in->SetBranchAddress("x_L_2_F", &ev.h.L_2_F.x); ch_in->SetBranchAddress("y_L_2_F", &ev.h.L_2_F.y);
 
-	inT->SetBranchAddress("v_R_1_F", &ev.h.R_1_F.v); inT->SetBranchAddress("x_R_1_F", &ev.h.R_1_F.x); inT->SetBranchAddress("y_R_1_F", &ev.h.R_1_F.y);
-	inT->SetBranchAddress("v_R_2_N", &ev.h.R_2_N.v); inT->SetBranchAddress("x_R_2_N", &ev.h.R_2_N.x); inT->SetBranchAddress("y_R_2_N", &ev.h.R_2_N.y);
-	inT->SetBranchAddress("v_R_2_F", &ev.h.R_2_F.v); inT->SetBranchAddress("x_R_2_F", &ev.h.R_2_F.x); inT->SetBranchAddress("y_R_2_F", &ev.h.R_2_F.y);	
+	ch_in->SetBranchAddress("v_R_1_F", &ev.h.R_1_F.v); ch_in->SetBranchAddress("x_R_1_F", &ev.h.R_1_F.x); ch_in->SetBranchAddress("y_R_1_F", &ev.h.R_1_F.y);
+	ch_in->SetBranchAddress("v_R_2_N", &ev.h.R_2_N.v); ch_in->SetBranchAddress("x_R_2_N", &ev.h.R_2_N.x); ch_in->SetBranchAddress("y_R_2_N", &ev.h.R_2_N.y);
+	ch_in->SetBranchAddress("v_R_2_F", &ev.h.R_2_F.v); ch_in->SetBranchAddress("x_R_2_F", &ev.h.R_2_F.x); ch_in->SetBranchAddress("y_R_2_F", &ev.h.R_2_F.y);	
 
-	inT->SetBranchAddress("timestamp", &ev.timestamp);
-	inT->SetBranchAddress("run_num", &ev.run_num);
-	inT->SetBranchAddress("bunch_num", &ev.bunch_num);
-	inT->SetBranchAddress("event_num", &ev.event_num);
-	inT->SetBranchAddress("trigger_num", &ev.trigger_num);
-	inT->SetBranchAddress("trigger_bits", &ev.trigger_bits);
+	ch_in->SetBranchAddress("timestamp", &ev.timestamp);
+	ch_in->SetBranchAddress("run_num", &ev.run_num);
+	ch_in->SetBranchAddress("bunch_num", &ev.bunch_num);
+	ch_in->SetBranchAddress("event_num", &ev.event_num);
+	ch_in->SetBranchAddress("trigger_num", &ev.trigger_num);
+	ch_in->SetBranchAddress("trigger_bits", &ev.trigger_bits);
 
 	// get time-dependent corrections
 	TGraph *corrg_pileup = NULL;
@@ -310,7 +320,6 @@ int main(int argc, char **argv)
 			corrg_pileup = (TGraph *) puF->Get("45t_56b/dgn");
 	}
 
-	// TODO
 	/*
 	TGraph *g_th_x_diffRL_RMS = NULL;
 	TGraph *g_th_y_diffRL_RMS = NULL;
@@ -768,9 +777,9 @@ int main(int argc, char **argv)
 	map<unsigned int, pair<unsigned int, unsigned int> > runTimestampBoundaries;
 
 	// build histograms
-	for (int ev_idx = 0; ev_idx < inT->GetEntries(); ++ev_idx)
+	for (int ev_idx = 0; ev_idx < ch_in->GetEntries(); ev_idx += 1)
 	{
-		inT->GetEntry(ev_idx);
+		ch_in->GetEntry(ev_idx);
 
 		// remove troublesome runs
 		unsigned int run = ev.run_num / 100000;
@@ -1020,7 +1029,7 @@ int main(int argc, char **argv)
 		// data for alignment
 		// (SHOULD use hit positions WITHOUT alignment corrections, i.e. ev.h)
 		signed int period = int((ev.timestamp - anal.alignment_t0) / anal.alignment_ts);
-		if (detailsLevel >= 0)
+		if (detailsLevel >= 2)
 		{
 			if (g_w_vs_timestamp_sel.find(period) == g_w_vs_timestamp_sel.end())
 			{
