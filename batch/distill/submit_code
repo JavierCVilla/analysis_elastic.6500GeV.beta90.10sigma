@@ -1,0 +1,32 @@
+#!/bin/bash
+
+function Submit()
+{
+	local dir="$1"
+	local tag="${dir//\//_}"
+
+	echo ""
+	echo "* $dir"
+
+	# compile
+	cd "../../" || return 1
+	./run distill.cc -dno -no-bckg "$dir" || return 2
+	cd - &> /dev/null
+
+	# process each diagonal
+	for dgn in "45b_56t" "45t_56b"
+	do
+		# make job script
+		local job_file="run/job_distill_${tag}_${dgn}"
+		echo "$job_file"
+
+		cat "job_template" | sed "\
+				s|\$dir|$dir|;\
+				s|\$dgn|$dgn|;\
+			" > "$job_file"
+
+		# submit
+		chmod a+x "$job_file"
+		bsub -q 1nd "`pwd`/$job_file"
+	done
+}

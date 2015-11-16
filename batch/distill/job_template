@@ -1,0 +1,25 @@
+#!/bin/sh
+
+job_home=`pwd -P`
+export HOME="/afs/cern.ch/exp/totem/scratch/jkaspar"
+export RFIO_USE_CASTOR_V2=YES
+export STAGE_HOST=castorpublic
+export STAGE_SVCCLASS=default
+export SCRAM_ARCH='slc5_amd64_gcc434'
+source "/afs/cern.ch/cms/cmsset_default.sh"
+cd "/afs/cern.ch/work/j/jkaspar/software/offline/704/src"
+eval `scram runtime -sh`
+
+# EOS configuration
+source "/afs/cern.ch/project/eos/installation/totem/etc/setup.sh"
+shopt -s expand_aliases
+
+# go to analysis directory
+cd "/afs/cern.ch/work/j/jkaspar/analyses/elastic/6500GeV,beta90,10sigma"
+
+# go to dataset directory
+cd "$dir"
+
+# run the process
+./.distill "$dgn"\
+	&> "distill_$dgn.log_run"

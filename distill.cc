@@ -155,10 +155,6 @@ int main(int argc, char **argv)
 	long int nDistilledEvents = 0;
 	for (; evi < ch->GetEntries(); evi++)
 	{
-		// TODO: remove
-		if (evi > 150)
-			break;
-
 		ch->GetEvent(evi);
 
 		ev.h.L_1_F.v = rp_L_1_F->valid; ev.h.L_1_F.x = rp_L_1_F->x; ev.h.L_1_F.y = rp_L_1_F->y;

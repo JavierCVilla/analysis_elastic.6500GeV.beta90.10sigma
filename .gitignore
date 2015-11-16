@@ -10,3 +10,6 @@ alignment/test_linearity
 DS-merged/merge
 
 */alignment_fit.out
+
+batch/distill/submit
+batch/distill/run/
