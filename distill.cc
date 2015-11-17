@@ -15,7 +15,20 @@
 #include "TotemAnalysis/TotemNtuplizer/interface/RawDataFormats.h"
 #include "TotemAnalysis/TotemNtuplizer/interface/RPRootTrackInfo.h"
 
+#include <csignal>
+
 using namespace std;
+
+//----------------------------------------------------------------------------------------------------
+
+bool interrupt_loop = false;
+
+void SigIntHandler(int)
+{
+	interrupt_loop = true;
+}
+
+//----------------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv)
 {
@@ -37,10 +50,11 @@ int main(int argc, char **argv)
 
 	InitInputFiles();
 	TChain *ch = new TChain("TotemNtuple");
+	printf(">> input files\n");
 	for (unsigned int i = 0; i < input_files.size(); i++)
 	{
 		ch->Add(input_files[i].c_str());
-		printf("+ %s\n", input_files[i].c_str());
+		printf("    %s\n", input_files[i].c_str());
 	}
 	printf(">> chain entries: %llu\n", ch->GetEntries());
 
@@ -129,7 +143,11 @@ int main(int argc, char **argv)
 	*/
 
 	// ouput file
-	TFile *outF = TFile::Open((storageDir + "/distill_" + argv[1] + ".root").c_str(), "recreate");
+	// TODO: solve
+	//string fn_out = storageDir + "/distill_" + argv[1] + "_new.root";
+	string fn_out = string("distill_") + argv[1] + "_new.root";
+	printf(">> output file: %s\n", fn_out.c_str());
+	TFile *f_out = TFile::Open(fn_out.c_str(), "recreate");
 
 	// set up output tree
 	EventRed ev;
@@ -153,7 +171,10 @@ int main(int argc, char **argv)
 	// loop over the chain entries
 	long int evi = 0;
 	long int nDistilledEvents = 0;
-	for (; evi < ch->GetEntries(); evi++)
+
+	signal(SIGINT, SigIntHandler);
+
+	for (; evi < ch->GetEntries() && !interrupt_loop; evi++)
 	{
 		ch->GetEvent(evi);
 
@@ -191,6 +212,9 @@ int main(int argc, char **argv)
 		outT->Fill();
 	}
 
+	if (interrupt_loop)
+		printf("WARNING: User interrupt!\n");
+
 	printf(">> last event number: %li\n", evi);
 
 	printf("\n");
@@ -199,6 +223,6 @@ int main(int argc, char **argv)
 	// save output tree
 	outT->Write();
 
-	delete outF;
+	delete f_out;
 	return 0;
 }
