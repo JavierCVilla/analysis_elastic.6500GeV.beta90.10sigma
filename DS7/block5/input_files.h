@@ -8,6 +8,6 @@ void InitInputFiles()
 
 	input_files.clear();
 
-	for (unsigned int idx = 5; idx < 45; ++idx)
+	for (unsigned int idx = 125; idx < 165; ++idx)
 		input_files.push_back(input_files_full[idx]);
 }

@@ -13,3 +13,4 @@ DS-merged/merge
 
 batch/distill/submit
 batch/distill/run/
+batch/distill/manipulate_remote_ntuples
