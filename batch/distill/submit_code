@@ -3,7 +3,9 @@
 #----------------------------------------------------------------------------------------------------
 # defaults
 
-queue="1nd"
+batch_queue="1nd"
+batch_resources=""
+batch_options=""
 
 #----------------------------------------------------------------------------------------------------
 
@@ -30,10 +32,11 @@ function Submit()
 		cat "job_template" | sed "\
 				s|\$dir|$dir|;\
 				s|\$dgn|$dgn|;\
+				s|\$tag|$tag|;\
 			" > "$job_file"
 
 		# submit
 		chmod a+x "$job_file"
-		bsub -q "$queue" "`pwd`/$job_file"
+		bsub -q "$batch_queue" -R "$batch_resources" $batch_options "`pwd`/$job_file"
 	done
 }
