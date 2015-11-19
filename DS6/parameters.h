@@ -33,25 +33,6 @@ void Init_base()
 	alignmentSources.push_back(alSrc);
 	*/
 
-	// approximate (time independent) resolutions
-	// TODO
-	anal.si_th_y_1arm = 1.7E-6 / sqrt(2.);
-	anal.si_th_y_1arm_unc = 0.E-6 / sqrt(2.);
-
-	anal.si_th_y_2arm = anal.si_th_y_1arm / sqrt(2.);
-	anal.si_th_y_2arm_unc = 0E-6;
-
-	anal.si_th_x_1arm_L = 8E-6;
-	anal.si_th_x_1arm_R = 8E-6;
-	anal.si_th_x_1arm_unc = 0E-6;
-
-	anal.si_th_x_2arm = 0E-6;
-	anal.si_th_x_2arm_unc = 0E-6;
-
-	// analysis settings
-	anal.th_x_lcut = -1.;	
-	anal.th_x_hcut = +1.;
-	
 #if 0
 	anal.use_time_dependent_resolutions = false;
 
