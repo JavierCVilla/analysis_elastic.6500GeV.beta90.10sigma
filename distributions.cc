@@ -283,8 +283,7 @@ int main(int argc, char **argv)
 		printf("+ %s\n", f.c_str());
 		ch_in->Add(f.c_str());
 	}
-	printf("%lu entries\n", ch_in->GetEntries());
-
+	printf("%llu entries\n", ch_in->GetEntries());
 
 	// init output file
 	TFile *outF = TFile::Open((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
@@ -516,6 +515,7 @@ int main(int argc, char **argv)
 	TGraph *g_th_y_vs_th_x = new TGraph(); g_th_y_vs_th_x->SetName("g_th_y_vs_th_x"); g_th_y_vs_th_x->SetTitle(";#theta_{x}^{L};#theta_{y}^{L}");
 	
 	TH2D *h_th_y_L_vs_th_y_R = new TH2D("h_th_y_L_vs_th_y_R", ";#theta_{y}^{R};#theta_{y}^{L}", 300, -150E-6, +150E-6, 300, -150E-6, +150E-6);
+	TGraph *g_th_y_L_vs_th_y_R = new TGraph(); g_th_y_L_vs_th_y_R->SetName("g_th_y_L_vs_th_y_R"); g_th_y_L_vs_th_y_R->SetTitle(";#theta_{y}^{R};#theta_{y}^{L}");
 	
 	TH1D *h_th_x = new TH1D("h_th_x", ";#theta_{x}", 250, -500E-6, +500E-6); h_th_x->SetLineColor(1);
 	TH1D *h_th_y = new TH1D("h_th_y", ";#theta_{y}", 250, -500E-6, +500E-6); h_th_y->SetLineColor(1);
@@ -776,8 +776,9 @@ int main(int argc, char **argv)
 
 	map<unsigned int, pair<unsigned int, unsigned int> > runTimestampBoundaries;
 
-	// build histograms
-	for (int ev_idx = 0; ev_idx < ch_in->GetEntries(); ev_idx += 1)
+	// build histograms - start event loop
+	// TODO: configurable step
+	for (int ev_idx = 0; ev_idx < ch_in->GetEntries(); ev_idx += 10)
 	{
 		ch_in->GetEntry(ev_idx);
 
@@ -810,7 +811,7 @@ int main(int argc, char **argv)
 		}
 
 		// diagonal cut
-		bool allDiagonalRPs = (ev.h.L_1_F.v && ev.h.L_2_F.v && ev.h.R_1_F.v && ev.h.R_2_F.v);
+		bool allDiagonalRPs = (ev.h.L_2_N.v && ev.h.L_2_F.v && ev.h.R_2_N.v && ev.h.R_2_F.v);
 		if (!allDiagonalRPs)
 			continue;
 		
@@ -1178,6 +1179,8 @@ int main(int argc, char **argv)
 		}
 	
 		h_th_y_L_vs_th_y_R->Fill(k.th_y_R, k.th_y_L);
+		if (detailsLevel > 2)
+			g_th_y_L_vs_th_y_R->SetPoint(g_th_y_L_vs_th_y_R->GetN(), k.th_y_R, k.th_y_L);
 
 		h_th_x->Fill(k.th_x);
 		h_th_y->Fill(k.th_y);
@@ -1917,15 +1920,13 @@ int main(int argc, char **argv)
 	g_th_y_R_vs_th_x_R->Write();
 	g_th_y_vs_th_x->Write();
 	
-	h_th_y_L_vs_th_y_R->Write();
-	//g_th_y_L_vs_th_y_R->Write();
-
-	if (detailsLevel > 2)
 	{
 		c = new TCanvas();
 		c->SetLogz(1);
+		c->ToggleEventStatus();
+		c->SetCrosshair(1);
 		h_th_y_L_vs_th_y_R->Draw("colz");
-		//g_th_y_L_vs_th_y_R->Draw("p");
+		g_th_y_L_vs_th_y_R->Draw("p");
 		c->Write("canvas_th_y_L_vs_th_y_R");
 	}
 	
