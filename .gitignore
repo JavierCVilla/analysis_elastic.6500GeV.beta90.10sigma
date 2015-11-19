@@ -15,4 +15,9 @@ DS-merged/merge
 
 batch/distill/submit
 batch/distill/run/
-batch/distill/manipulate_remote_ntuples
+batch/distill/copy_remote_ntuples
+batch/distill/delete_remote_ntuples
+batch/distill/rename_remote_ntuples
+
+batch/distributions/run/
+batch/distributions/submit
