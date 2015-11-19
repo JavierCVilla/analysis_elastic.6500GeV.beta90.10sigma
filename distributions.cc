@@ -125,6 +125,8 @@ int main(int argc, char **argv)
 	int time_group_remainder = 0;
 	int event_group_divisor = 0;
 	int event_group_index = 0;
+	unsigned int evIdxStep = 1;
+	
 
 	// parse command line arguments, starting from index 2
 	for (int i = 2; i < argc; i++)
@@ -196,11 +198,17 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-
 		if (strcmp(argv[i], "-eg-index") == 0)
 		{
 			if (argc-1 > i)
 				event_group_index = (int) atof(argv[++i]);
+			continue;
+		}
+
+		if (strcmp(argv[i], "-step") == 0)
+		{
+			if (argc-1 > i)
+				evIdxStep = (int) atof(argv[++i]);
 			continue;
 		}
 
@@ -216,6 +224,7 @@ int main(int argc, char **argv)
 	printf("* time_group_remainder = %i\n", time_group_remainder);
 	printf("* event_group_divisor = %i\n", event_group_divisor);
 	printf("* event_group_index = %i\n", event_group_index);
+	printf("* evIdxStep = %u\n", evIdxStep);
 
 	// select cuts
 	anal.BuildCuts(); 
@@ -777,8 +786,7 @@ int main(int argc, char **argv)
 	map<unsigned int, pair<unsigned int, unsigned int> > runTimestampBoundaries;
 
 	// build histograms - start event loop
-	// TODO: configurable step
-	for (int ev_idx = 0; ev_idx < ch_in->GetEntries(); ev_idx += 10)
+	for (int ev_idx = 0; ev_idx < ch_in->GetEntries(); ev_idx += evIdxStep)
 	{
 		ch_in->GetEntry(ev_idx);
 
