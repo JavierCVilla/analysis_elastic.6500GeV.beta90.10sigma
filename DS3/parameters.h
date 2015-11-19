@@ -10,7 +10,11 @@ void Init_base()
 
 	// list of subdirectories with distilled ntuples
 	distilledNtuples.push_back("block1");
-	// TODO: add full list
+	distilledNtuples.push_back("block2");
+	distilledNtuples.push_back("block3");
+	distilledNtuples.push_back("block4");
+	distilledNtuples.push_back("block5");
+	distilledNtuples.push_back("block6");
 
 	// selection of bunches
 	keepAllBunches = true;

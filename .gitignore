@@ -4,6 +4,8 @@
 *.log_*
 *.root
 
+summaries/
+
 alignment/print_fit
 alignment/test_linearity
 
