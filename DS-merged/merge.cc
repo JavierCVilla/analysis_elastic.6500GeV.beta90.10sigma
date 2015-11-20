@@ -19,6 +19,8 @@ struct shist
 
 //----------------------------------------------------------------------------------------------------
 
+bool sumBins = true;
+
 TH1D* Merge(const vector<shist> &hists)
 {
 	TH1D *m = new TH1D(*hists[0].hist);
@@ -26,22 +28,43 @@ TH1D* Merge(const vector<shist> &hists)
 
 	for (int bi = 1; bi <= m->GetNbinsX(); bi++)
 	{
-		double Svw = 0., Sw = 0.;
-		for (unsigned int hi = 0; hi < hists.size(); hi++)
+		if (sumBins)
 		{
-			double v = hists[hi].hist->GetBinContent(bi);
-			double e = hists[hi].hist->GetBinError(bi) * hists[hi].scale;
-			double w = (e > 0.) ? 1./e/e : 0.;
-
-			Sw += w;
-			Svw += v * w;
+			// sum bins
+			double Sv = 0., Su2 = 0.;
+			for (unsigned int hi = 0; hi < hists.size(); hi++)
+			{
+				double v = hists[hi].hist->GetBinContent(bi);
+				double u = hists[hi].hist->GetBinError(bi) * hists[hi].scale;
+	
+				Sv += v;
+				Su2 += u * u;
+			}
+	
+			double v = Sv;
+			double u = sqrt(Su2);
+	
+			m->SetBinContent(bi, v);
+			m->SetBinError(bi, u);
+		} else {
+			// average bins
+			double Svw = 0., Sw = 0.;
+			for (unsigned int hi = 0; hi < hists.size(); hi++)
+			{
+				double v = hists[hi].hist->GetBinContent(bi);
+				double e = hists[hi].hist->GetBinError(bi) * hists[hi].scale;
+				double w = (e > 0.) ? 1./e/e : 0.;
+	
+				Sw += w;
+				Svw += v * w;
+			}
+	
+			double v = (Sw > 0.) ? Svw / Sw : 0.;
+			double e = (Sw > 0.) ? 1. / sqrt(Sw) : 0.;
+	
+			m->SetBinContent(bi, v);
+			m->SetBinError(bi, e);
 		}
-
-		double v = (Sw > 0.) ? Svw / Sw : 0.;
-		double e = (Sw > 0.) ? 1. / sqrt(Sw) : 0.;
-
-		m->SetBinContent(bi, v);
-		m->SetBinError(bi, e);
 	}
 
 	return m;
@@ -68,7 +91,10 @@ int main()
 	entries.push_back(Entry("DS2", 1., "DS2", true));
 	entries.push_back(Entry("DS3", 1., "DS3", true));
 	entries.push_back(Entry("DS4", 1., "DS4", true));
-	entries.push_back(Entry("DS5", 1., "DS5", true));
+	entries.push_back(Entry("DS5/group1", 1., "DS5-group1", true));
+	entries.push_back(Entry("DS5/group2", 1., "DS5-group2", true));
+	entries.push_back(Entry("DS5/group3", 1., "DS5-group3", true));
+	entries.push_back(Entry("DS5/group4", 1., "DS5-group4", true));
 	entries.push_back(Entry("DS6", 1., "DS6", true));
 	entries.push_back(Entry("DS7", 1., "DS7", true));
 	
@@ -77,7 +103,9 @@ int main()
 	diagonals.push_back("45t_56b");
 
 	vector<string> binnings;
-	binnings.push_back("eb");
+	//binnings.push_back("eb");
+	binnings.push_back("ob-1-10-0.2");
+	binnings.push_back("ob-1-30-0.2");
 
 	// prepare output
 	TFile *f_out = new TFile("merged.root", "recreate");
