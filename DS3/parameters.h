@@ -1,5 +1,7 @@
 #include "parameters_global.h"
 
+double timestamp_min = 87.7E3, timestamp_max = 99.4E3;
+
 void Init_base()
 {
 	// load global settings
