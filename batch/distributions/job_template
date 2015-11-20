@@ -24,5 +24,4 @@ group_dir="$anal_dir/$dir"
 # run the process
 cd "$group_dir"
 
-./.distributions $options "$dgn"\
-	&> "distributions_$dgn.log_run"
+{ time ./.distributions "$dgn" $options ; }	&> "distributions_$dgn.log_run"

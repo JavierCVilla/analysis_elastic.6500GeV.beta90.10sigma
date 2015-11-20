@@ -32,10 +32,10 @@ function Submit()
 		echo "$job_file"
 
 		cat "job_template" | sed "\
-				s|\$dir|$dir|;\
-				s|\$dgn|$dgn|;\
-				s|\$tag|$tag|;\
-				s|\$options|$execute_options|;\
+				s|\$dir|$dir|g;\
+				s|\$dgn|$dgn|g;\
+				s|\$tag|$tag|g;\
+				s|\$options|$execute_options|g;\
 			" > "$job_file"
 
 		# submit
