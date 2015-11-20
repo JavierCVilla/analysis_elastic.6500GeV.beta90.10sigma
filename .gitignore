@@ -21,3 +21,9 @@ batch/distill/rename_remote_ntuples
 
 batch/distributions/run/
 batch/distributions/submit
+
+binning/make_fit_cc.d
+binning/make_fit_cc.so
+binning/make_generators
+binning/simu
+
