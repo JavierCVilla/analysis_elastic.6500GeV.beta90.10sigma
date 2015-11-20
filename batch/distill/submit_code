@@ -23,16 +23,17 @@ function Submit()
 	cd - &> /dev/null
 
 	# process each diagonal
-	for dgn in "45b_56t" "45t_56b"
+	#for dgn in "45b_56t" "45t_56b"
+	for dgn in "45b_56b" "45t_56t"
 	do
 		# make job script
 		local job_file="run/job_distill_${tag}_${dgn}"
 		echo "$job_file"
 
 		cat "job_template" | sed "\
-				s|\$dir|$dir|;\
-				s|\$dgn|$dgn|;\
-				s|\$tag|$tag|;\
+				s|\$dir|$dir|g;\
+				s|\$dgn|$dgn|g;\
+				s|\$tag|$tag|g;\
 			" > "$job_file"
 
 		# submit

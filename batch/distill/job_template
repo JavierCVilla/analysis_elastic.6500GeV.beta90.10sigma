@@ -41,8 +41,7 @@ storage_dir="/eos/totem/user/j/jkaspar/analyses/elastic/6500GeV,beta90,10sigma/$
 # run the process
 cd "$job_home"
 
-"${block_dir}/.distill" "$dgn"\
-	&> "${block_dir}/distill_$dgn.log_run"
+{ time "${block_dir}/.distill" "$dgn" ; } &> "${block_dir}/distill_$dgn.log_run"
 
 ls -l
 
