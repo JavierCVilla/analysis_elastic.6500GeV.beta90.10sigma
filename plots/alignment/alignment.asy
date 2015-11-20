@@ -8,14 +8,14 @@ string datasets[];
 real times_min[], times_max[];
 
 /*
-datasets.push("DS1"); times_min.push(23.0); times_max.push(25.2);
-datasets.push("DS2"); times_min.push(0); times_max.push(2);
-datasets.push("DS3"); times_min.push(0); times_max.push(2);
-datasets.push("DS4"); times_min.push(23.0); times_max.push(25);
-datasets.push("DS5"); times_min.push(33.4); times_max.push(34.9);
+datasets.push("DS1"); times_min.push(5.5); times_max.push(9);
+datasets.push("DS2"); times_min.push(14.5); times_max.push(16.5);
+datasets.push("DS3"); times_min.push(24); times_max.push(28);
+datasets.push("DS4"); times_min.push(47); times_max.push(49.25);
 */
-datasets.push("DS6"); times_min.push(46.0); times_max.push(48);
-//datasets.push("DS7"); times_min.push(56.1); times_max.push(58);
+datasets.push("DS5"); times_min.push(57); times_max.push(66.5);
+datasets.push("DS6"); times_min.push(70); times_max.push(73);
+datasets.push("DS7"); times_min.push(80); times_max.push(83.5);
 
 string units[] = { "L_2_F", "L_2_N", "L_1_F", "R_1_F", "R_2_N", "R_2_F" };
 string unit_labels[] = { "left, 220, far", "left, 220, near", "left, 210, far", "right, 210, far", "right, 220, near", "right, 220, far" };
@@ -27,7 +27,6 @@ string unit_labels[] = { "right, 210, far", "right, 220, near", "right, 220, far
 //string unit_labels[] = { "Left Far", "Left Near" };
 
 xSizeDef = 10cm;
-xTicksDef = LeftTicks(Step=0.5, step=0.25);
 drawGridDef = true;
 
 TGraph_errorBar = None;
@@ -42,6 +41,11 @@ for (int dsi : datasets.keys)
 	real time_max = times_max[dsi];
 
 	write(dataset);
+
+	if (dataset == "DS5")
+		xTicksDef = LeftTicks(Step=1, step=0.5);
+	else
+		xTicksDef = LeftTicks(Step=0.5, step=0.25);
 
 	for (int ui : units.keys)
 	{
@@ -58,8 +62,8 @@ for (int dsi : datasets.keys)
 		draw(shift(0,    0)*swToHours, rGetObj(topDir+dataset+"/alignment_fit.root", ""+units[ui]+"/a_fit"), "l", red+1.5pt);
 		draw(shift(0, -0.2)*swToHours, rGetObj(topDir+dataset+"/alignment_fit.root", ""+units[ui]+"/a_fit"), "l", red+dashed);
 	
-		//limits((time_min, -1), (time_max, +1), Crop);
-		ylimits(-1, +1, Crop);
+		limits((time_min, -1), (time_max, +1), Crop);
+		//ylimits(-1, +1, Crop);
 		AttachLegend(unit_labels[ui], SE, SE);
 	}
 	
@@ -87,8 +91,8 @@ for (int dsi : datasets.keys)
 		draw(shift(0,   0)*swToHours, rGetObj(topDir+dataset+"/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+1.5pt);
 		draw(shift(0, -10)*swToHours, rGetObj(topDir+dataset+"/alignment_fit.root", ""+units[ui]+"/b_fit"), "l", red+dashed);
 	
-		//limits((time_min, -80), (time_max, +80), Crop);
-		ylimits(-50, +50, Crop);
+		limits((time_min, -50), (time_max, +50), Crop);
+		//ylimits(-50, +50, Crop);
 		AttachLegend(unit_labels[ui], SE, SE);
 	}
 	
@@ -118,8 +122,8 @@ for (int dsi : datasets.keys)
 		draw(shift(0,   0)*swToHours, rGetObj(topDir+dataset+"/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+1.5pt);
 		draw(shift(0, -50)*swToHours, rGetObj(topDir+dataset+"/alignment_fit.root", ""+units[ui]+"/c_fit"), "l", red+dashed);
 	
-		//limits((time_min, -150), (time_max, +150), Crop);
-		ylimits(-150, +150, Crop);
+		limits((time_min, -150), (time_max, +150), Crop);
+		//ylimits(-150, +150, Crop);
 		AttachLegend(unit_labels[ui], SE, SE);
 	}
 	
