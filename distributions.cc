@@ -982,7 +982,7 @@ int main(int argc, char **argv)
 		
 		N_el++;
 
-		if (N_el > maxTaggedEvents)
+		if (maxTaggedEvents > 0 && N_el > maxTaggedEvents)
 			break;
 
 		g_selected_bunch_num_vs_timestamp->SetPoint(g_selected_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
