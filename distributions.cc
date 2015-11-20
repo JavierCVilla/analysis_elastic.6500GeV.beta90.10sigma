@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 	int event_group_divisor = 0;
 	int event_group_index = 0;
 	unsigned int evIdxStep = 1;
-	
+	unsigned int maxTaggedEvents = 0;	// 0 means no maximum
 
 	// parse command line arguments, starting from index 2
 	for (int i = 2; i < argc; i++)
@@ -212,6 +212,13 @@ int main(int argc, char **argv)
 			continue;
 		}
 
+		if (strcmp(argv[i], "-events") == 0)
+		{
+			if (argc-1 > i)
+				maxTaggedEvents = (int) atof(argv[++i]);
+			continue;
+		}
+
 		printf("ERROR: unknown parameter `%s'.\n", argv[i]);
 		return 3;
 	}
@@ -225,6 +232,7 @@ int main(int argc, char **argv)
 	printf("* event_group_divisor = %i\n", event_group_divisor);
 	printf("* event_group_index = %i\n", event_group_index);
 	printf("* evIdxStep = %u\n", evIdxStep);
+	printf("* maxTaggedEvents = %u\n", maxTaggedEvents);
 
 	// select cuts
 	anal.BuildCuts(); 
@@ -281,7 +289,9 @@ int main(int argc, char **argv)
 	// binnings
 	vector<string> binnings;
 	binnings.push_back("ub");
-	binnings.push_back("eb");
+	//binnings.push_back("eb");
+	binnings.push_back("ob-1-10-0.2");
+	binnings.push_back("ob-1-30-0.2");
 
 	// get input
 	TChain *ch_in = new TChain("distilled");
@@ -969,10 +979,13 @@ int main(int argc, char **argv)
 		// elastic cut
 		if (!select)
 			continue;
+		
+		N_el++;
+
+		if (N_el > maxTaggedEvents)
+			break;
 
 		g_selected_bunch_num_vs_timestamp->SetPoint(g_selected_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
-
-		N_el++;
 
 		// fill zero-bias plots
 		if (zero_bias_event)

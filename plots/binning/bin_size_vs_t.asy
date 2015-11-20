@@ -12,9 +12,9 @@ drawGridDef = true;
 
 string binnings[] = {
 	//"ub",
-	//"ob-1-30-0.10",
-	//"ob-2-20-0.10",
-	//"ob-3-10-0.10",
+	"ob-1-10-0.2",
+	//"ob-1-20-0.1",
+	"ob-1-30-0.2",
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -39,10 +39,10 @@ AddToLegend("<{\it binnings in analysis:}");
 for (int bi : binnings.keys)
 {
 	pen p = StdPen(bi);
-	draw(rGetObj(topDir+"DS4/distributions_45b_56t.root", "binning/g_binning_"+binnings[bi]), "p,l,d0", p+0.2pt, mCi+0.8pt+p, binnings[bi]);
+	draw(rGetObj(topDir+"DS1/distributions_45b_56t.root", "binning/g_binning_"+binnings[bi]), "p,l,d0", p+0.2pt, mCi+0.8pt+p, binnings[bi]);
 }
 
-limits((0, 0), (3.0, 0.20), Crop);
+limits((0, 0), (3, 0.21), Crop);
 
 frame f_legend = BuildLegend();
 

@@ -27,7 +27,7 @@ void Init_global()
 
 	// binning
 	// TODO
-	anal.t_min = 0.; anal.t_max = 3.5;
+	anal.t_min = 0.02; anal.t_max = 3.5;
 	anal.t_min_full = 0.; anal.t_max_full = 4.0;
 
 	// approximate (time independent) resolutions
