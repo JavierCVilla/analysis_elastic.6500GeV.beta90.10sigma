@@ -23,9 +23,18 @@ bool sumBins = true;
 
 TH1D* Merge(const vector<shist> &hists)
 {
+	// prepare merged histogram
 	TH1D *m = new TH1D(*hists[0].hist);
 	m->SetName("h_dsdt");
 
+	// merge number of entries
+	unsigned int entries = 0;
+	for (unsigned int hi = 0; hi < hists.size(); hi++)
+		entries += hists[hi].hist->GetEntries();
+
+	m->SetEntries(entries);
+
+	// merge bins
 	for (int bi = 1; bi <= m->GetNbinsX(); bi++)
 	{
 		if (sumBins)
