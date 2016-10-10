@@ -24,9 +24,10 @@ AddRun("DS1", 9876, 21335, 21714);
 AddRun("DS1", 9877, 21782, 23302);
 AddRun("DS1", 9879, 23535, 23902);
 AddRun("DS1", 9881, 24066, 25317);
-AddRun("DS1", 9883, 25474, 31456);
+AddRun("DS1", 9883, 25474, 32217);
 
 AddRun("DS2", 9893, 53002, 53350);
+AddRun("DS2", 9894, 53505, 54126);
 AddRun("DS2", 9895, 54170, 54581);
 AddRun("DS2", 9896, 54618, 55797);
 AddRun("DS2", 9898, 56135, 59114);
@@ -78,7 +79,7 @@ void DrawRunBands(string ds_filter="", real y_min=0, real y_max=0, bool details=
 		filldraw((x_min, y_min)--(x_max, y_min)--(x_max, y_max)--(x_min, y_max)--cycle, p, nullpen);
 
 		if (details)
-			label(format("{\SmallerFonts %u}", runs[i]), ((x_min + x_max)/2, y_max), S);
+			label(format("{\SmallerFonts\it %u}", runs[i]), ((x_min + x_max)/2, y_max), S);
 	}
 }
 
