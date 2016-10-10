@@ -125,8 +125,6 @@ int main(int argc, char **argv)
 	int time_group_remainder = 0;
 	int event_group_divisor = 0;
 	int event_group_index = 0;
-	unsigned int evIdxStep = 1;
-	unsigned int maxTaggedEvents = 0;	// 0 means no maximum
 
 	// parse command line arguments, starting from index 2
 	for (int i = 2; i < argc; i++)
@@ -198,24 +196,11 @@ int main(int argc, char **argv)
 			continue;
 		}
 
+
 		if (strcmp(argv[i], "-eg-index") == 0)
 		{
 			if (argc-1 > i)
 				event_group_index = (int) atof(argv[++i]);
-			continue;
-		}
-
-		if (strcmp(argv[i], "-step") == 0)
-		{
-			if (argc-1 > i)
-				evIdxStep = (int) atof(argv[++i]);
-			continue;
-		}
-
-		if (strcmp(argv[i], "-events") == 0)
-		{
-			if (argc-1 > i)
-				maxTaggedEvents = (int) atof(argv[++i]);
 			continue;
 		}
 
@@ -231,8 +216,6 @@ int main(int argc, char **argv)
 	printf("* time_group_remainder = %i\n", time_group_remainder);
 	printf("* event_group_divisor = %i\n", event_group_divisor);
 	printf("* event_group_index = %i\n", event_group_index);
-	printf("* evIdxStep = %u\n", evIdxStep);
-	printf("* maxTaggedEvents = %u\n", maxTaggedEvents);
 
 	// select cuts
 	anal.BuildCuts(); 
@@ -289,40 +272,29 @@ int main(int argc, char **argv)
 	// binnings
 	vector<string> binnings;
 	binnings.push_back("ub");
-	//binnings.push_back("eb");
-	binnings.push_back("ob-1-10-0.2");
-	binnings.push_back("ob-1-30-0.2");
+	binnings.push_back("eb");
 
-	// get input
-	TChain *ch_in = new TChain("distilled");
-	printf(">> input chain\n");
-	for (const auto &ntupleDir : distilledNtuples)
-	{
-		string f = storageDir + "/" + ntupleDir + "/distill_" + argv[1] + ".root";
-		printf("+ %s\n", f.c_str());
-		ch_in->Add(f.c_str());
-	}
-	printf("%llu entries\n", ch_in->GetEntries());
-
-	// init output file
-	TFile *outF = TFile::Open((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
+	// init files
+	TFile *inF = new TFile((inputDir + "/distill_" + argv[1] + ".root").c_str());
+	TFile *outF = new TFile((outputDir+"/distributions_" + argv[1] + ".root").c_str(), "recreate");
 
 	// get input data
+	TTree *inT = (TTree *) inF->Get("distilled");
 	EventRed ev;
-	ch_in->SetBranchAddress("v_L_1_F", &ev.h.L_1_F.v); ch_in->SetBranchAddress("x_L_1_F", &ev.h.L_1_F.x); ch_in->SetBranchAddress("y_L_1_F", &ev.h.L_1_F.y);
-	ch_in->SetBranchAddress("v_L_2_N", &ev.h.L_2_N.v); ch_in->SetBranchAddress("x_L_2_N", &ev.h.L_2_N.x); ch_in->SetBranchAddress("y_L_2_N", &ev.h.L_2_N.y);
-	ch_in->SetBranchAddress("v_L_2_F", &ev.h.L_2_F.v); ch_in->SetBranchAddress("x_L_2_F", &ev.h.L_2_F.x); ch_in->SetBranchAddress("y_L_2_F", &ev.h.L_2_F.y);
+	inT->SetBranchAddress("v_L_1_F", &ev.h.L_1_F.v); inT->SetBranchAddress("x_L_1_F", &ev.h.L_1_F.x); inT->SetBranchAddress("y_L_1_F", &ev.h.L_1_F.y);
+	inT->SetBranchAddress("v_L_2_N", &ev.h.L_2_N.v); inT->SetBranchAddress("x_L_2_N", &ev.h.L_2_N.x); inT->SetBranchAddress("y_L_2_N", &ev.h.L_2_N.y);
+	inT->SetBranchAddress("v_L_2_F", &ev.h.L_2_F.v); inT->SetBranchAddress("x_L_2_F", &ev.h.L_2_F.x); inT->SetBranchAddress("y_L_2_F", &ev.h.L_2_F.y);
 
-	ch_in->SetBranchAddress("v_R_1_F", &ev.h.R_1_F.v); ch_in->SetBranchAddress("x_R_1_F", &ev.h.R_1_F.x); ch_in->SetBranchAddress("y_R_1_F", &ev.h.R_1_F.y);
-	ch_in->SetBranchAddress("v_R_2_N", &ev.h.R_2_N.v); ch_in->SetBranchAddress("x_R_2_N", &ev.h.R_2_N.x); ch_in->SetBranchAddress("y_R_2_N", &ev.h.R_2_N.y);
-	ch_in->SetBranchAddress("v_R_2_F", &ev.h.R_2_F.v); ch_in->SetBranchAddress("x_R_2_F", &ev.h.R_2_F.x); ch_in->SetBranchAddress("y_R_2_F", &ev.h.R_2_F.y);	
+	inT->SetBranchAddress("v_R_1_F", &ev.h.R_1_F.v); inT->SetBranchAddress("x_R_1_F", &ev.h.R_1_F.x); inT->SetBranchAddress("y_R_1_F", &ev.h.R_1_F.y);
+	inT->SetBranchAddress("v_R_2_N", &ev.h.R_2_N.v); inT->SetBranchAddress("x_R_2_N", &ev.h.R_2_N.x); inT->SetBranchAddress("y_R_2_N", &ev.h.R_2_N.y);
+	inT->SetBranchAddress("v_R_2_F", &ev.h.R_2_F.v); inT->SetBranchAddress("x_R_2_F", &ev.h.R_2_F.x); inT->SetBranchAddress("y_R_2_F", &ev.h.R_2_F.y);	
 
-	ch_in->SetBranchAddress("timestamp", &ev.timestamp);
-	ch_in->SetBranchAddress("run_num", &ev.run_num);
-	ch_in->SetBranchAddress("bunch_num", &ev.bunch_num);
-	ch_in->SetBranchAddress("event_num", &ev.event_num);
-	ch_in->SetBranchAddress("trigger_num", &ev.trigger_num);
-	ch_in->SetBranchAddress("trigger_bits", &ev.trigger_bits);
+	inT->SetBranchAddress("timestamp", &ev.timestamp);
+	inT->SetBranchAddress("run_num", &ev.run_num);
+	inT->SetBranchAddress("bunch_num", &ev.bunch_num);
+	inT->SetBranchAddress("event_num", &ev.event_num);
+	inT->SetBranchAddress("trigger_num", &ev.trigger_num);
+	inT->SetBranchAddress("trigger_bits", &ev.trigger_bits);
 
 	// get time-dependent corrections
 	TGraph *corrg_pileup = NULL;
@@ -391,8 +363,9 @@ int main(int argc, char **argv)
 			printf("ERROR: unsmearing correction object `%s' cannot be loaded.\n", unsmearing_object.c_str());
 	}
 
-	// book metadata histograms	
-	unsigned int timestamp_bins = timestamp_max - timestamp_min + 1.;
+	// book metadata histograms
+	double timestamp_min = 83E3, timestamp_max = 91E3;
+	unsigned int timestamp_bins = 8001;	// max - min + 1
 
 	TH1D *h_timestamp_dgn = new TH1D("h_timestamp_dgn", ";timestamp;rate   (Hz)", timestamp_bins, timestamp_min-0.5, timestamp_max+0.5);
 	TH1D *h_timestamp_B0 = new TH1D("h_timestamp_B0", ";timestamp;rate   (Hz)", timestamp_bins, timestamp_min-0.5, timestamp_max+0.5);
@@ -533,7 +506,6 @@ int main(int argc, char **argv)
 	TGraph *g_th_y_vs_th_x = new TGraph(); g_th_y_vs_th_x->SetName("g_th_y_vs_th_x"); g_th_y_vs_th_x->SetTitle(";#theta_{x}^{L};#theta_{y}^{L}");
 	
 	TH2D *h_th_y_L_vs_th_y_R = new TH2D("h_th_y_L_vs_th_y_R", ";#theta_{y}^{R};#theta_{y}^{L}", 300, -150E-6, +150E-6, 300, -150E-6, +150E-6);
-	TGraph *g_th_y_L_vs_th_y_R = new TGraph(); g_th_y_L_vs_th_y_R->SetName("g_th_y_L_vs_th_y_R"); g_th_y_L_vs_th_y_R->SetTitle(";#theta_{y}^{R};#theta_{y}^{L}");
 	
 	TH1D *h_th_x = new TH1D("h_th_x", ";#theta_{x}", 250, -500E-6, +500E-6); h_th_x->SetLineColor(1);
 	TH1D *h_th_y = new TH1D("h_th_y", ";#theta_{y}", 250, -500E-6, +500E-6); h_th_y->SetLineColor(1);
@@ -652,19 +624,19 @@ int main(int argc, char **argv)
 	TProfile *p_thl_y_L_vs_thl_y_R = new TProfile("p_thl_y_L_vs_thl_y_R", ";#theta_{y,local}^{R}   (rad);#theta_{y,local}^{L}   (rad)", 300, -60E-6, +60E-6);
 
 	// time-dependence histograms
-	TProfile *p_diffLR_th_x_vs_time = new TProfile("p_diffLR_th_x_vs_time", ";timestamp;mean of #Delta^{R-L}#theta_{x}", 200, timestamp_min, timestamp_max);
+	TProfile *p_diffLR_th_x_vs_time = new TProfile("p_diffLR_th_x_vs_time", ";timestamp;mean of #Delta^{R-L}#theta_{x}", 808, timestamp_min, timestamp_max);
 	TGraphErrors *gRMS_diffLR_th_x_vs_time = new TGraphErrors; gRMS_diffLR_th_x_vs_time->SetName("gRMS_diffLR_th_x_vs_time"); gRMS_diffLR_th_x_vs_time->SetTitle(";timestamp;RMS of #Delta^{R-L}#theta_{x}");
 
-	TProfile *p_diffLR_th_y_vs_time = new TProfile("p_diffLR_th_y_vs_time", ";timestamp;mean of #Delta^{R-L}#theta_{y}", 200, timestamp_min, timestamp_max);
+	TProfile *p_diffLR_th_y_vs_time = new TProfile("p_diffLR_th_y_vs_time", ";timestamp;mean of #Delta^{R-L}#theta_{y}", 808, timestamp_min, timestamp_max);
 	TGraphErrors *gRMS_diffLR_th_y_vs_time = new TGraphErrors; gRMS_diffLR_th_y_vs_time->SetName("gRMS_diffLR_th_y_vs_time"); gRMS_diffLR_th_y_vs_time->SetTitle(";timestamp;RMS of #Delta^{R-L}#theta_{y}");
 	
-	TProfile *p_diffNF_th_y_L_vs_time = new TProfile("p_diffNF_th_y_L_vs_time", ";timestamp;mean of #Delta^{F-N}#theta_{y}^{L}", 200, timestamp_min, timestamp_max);
+	TProfile *p_diffNF_th_y_L_vs_time = new TProfile("p_diffNF_th_y_L_vs_time", ";timestamp;mean of #Delta^{F-N}#theta_{y}^{L}", 808, timestamp_min, timestamp_max);
 	TGraphErrors *gRMS_diffNF_th_y_L_vs_time = new TGraphErrors; gRMS_diffNF_th_y_L_vs_time->SetName("gRMS_diffNF_th_y_L_vs_time"); gRMS_diffNF_th_y_L_vs_time->SetTitle(";timestamp;RMS of #Delta^{F-N}#theta_{y}^{L}");
 	
-	TProfile *p_diffNF_th_y_R_vs_time = new TProfile("p_diffNF_th_y_R_vs_time", ";timestamp;mean of #Delta^{F-N}#theta_{y}^{R}", 200, timestamp_min, timestamp_max);
+	TProfile *p_diffNF_th_y_R_vs_time = new TProfile("p_diffNF_th_y_R_vs_time", ";timestamp;mean of #Delta^{F-N}#theta_{y}^{R}", 808, timestamp_min, timestamp_max);
 	TGraphErrors *gRMS_diffNF_th_y_R_vs_time = new TGraphErrors; gRMS_diffNF_th_y_R_vs_time->SetName("gRMS_diffNF_th_y_R_vs_time"); gRMS_diffNF_th_y_R_vs_time->SetTitle(";timestamp;RMS of #Delta^{F-N}#theta_{y}^{R}");
 	
-	TProfile *p_vtx_x_vs_time = new TProfile("p_vtx_x_vs_time", ";timestamp;mean of x^{*}", 200, timestamp_min, timestamp_max);
+	TProfile *p_vtx_x_vs_time = new TProfile("p_vtx_x_vs_time", ";timestamp;mean of x^{*}", 808, timestamp_min, timestamp_max);
 	TGraphErrors *gRMS_vtx_x_vs_time = new TGraphErrors; gRMS_vtx_x_vs_time->SetName("gRMS_vtx_x_vs_time"); gRMS_vtx_x_vs_time->SetTitle(";timestamp;RMS of x^{*}");
 
 	TProfile *p_th_x_R_vs_time = new TProfile("p_th_x_R_vs_time", ";timestamp;#theta_{x}^{R}", 100, timestamp_min, timestamp_max);
@@ -672,8 +644,8 @@ int main(int argc, char **argv)
 	TProfile *p_th_x_L_vs_time = new TProfile("p_th_x_L_vs_time", ";timestamp;#theta_{x}^{L}", 100, timestamp_min, timestamp_max);
 	TProfile *p_th_y_L_vs_time = new TProfile("p_th_y_L_vs_time", ";timestamp;#theta_{y}^{L}", 100, timestamp_min, timestamp_max);
 	
-	TProfile *p_input_beam_div_x_vs_time = new TProfile("p_input_beam_div_x_vs_time", ";timestamp", 200, timestamp_min, timestamp_max);
-	TProfile *p_input_beam_div_y_vs_time = new TProfile("p_input_beam_div_y_vs_time", ";timestamp", 200, timestamp_min, timestamp_max);
+	TProfile *p_input_beam_div_x_vs_time = new TProfile("p_input_beam_div_x_vs_time", ";timestamp", 808, timestamp_min, timestamp_max);
+	TProfile *p_input_beam_div_y_vs_time = new TProfile("p_input_beam_div_y_vs_time", ";timestamp", 808, timestamp_min, timestamp_max);
 
 	// book acceptance-correction histograms
 	TProfile *p_t_ub_div_corr = new TProfile("p_t_ub_div_corr", ";t_ub_{y}", 2000., 0., 0.2);
@@ -794,10 +766,14 @@ int main(int argc, char **argv)
 
 	map<unsigned int, pair<unsigned int, unsigned int> > runTimestampBoundaries;
 
-	// build histograms - start event loop
-	for (int ev_idx = 0; ev_idx < ch_in->GetEntries(); ev_idx += evIdxStep)
+	// build histograms
+	for (int ev_idx = 0; ev_idx < inT->GetEntries(); ++ev_idx)
 	{
-		ch_in->GetEntry(ev_idx);
+		// TODO: remove
+		//if (ev_idx > 100000)
+		//	break;
+
+		inT->GetEntry(ev_idx);
 
 		// remove troublesome runs
 		unsigned int run = ev.run_num / 100000;
@@ -828,7 +804,7 @@ int main(int argc, char **argv)
 		}
 
 		// diagonal cut
-		bool allDiagonalRPs = (ev.h.L_2_N.v && ev.h.L_2_F.v && ev.h.R_2_N.v && ev.h.R_2_F.v);
+		bool allDiagonalRPs = (ev.h.L_1_F.v && ev.h.L_2_F.v && ev.h.R_1_F.v && ev.h.R_2_F.v);
 		if (!allDiagonalRPs)
 			continue;
 		
@@ -979,13 +955,10 @@ int main(int argc, char **argv)
 		// elastic cut
 		if (!select)
 			continue;
-		
-		N_el++;
-
-		if (maxTaggedEvents > 0 && N_el > maxTaggedEvents)
-			break;
 
 		g_selected_bunch_num_vs_timestamp->SetPoint(g_selected_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
+
+		N_el++;
 
 		// fill zero-bias plots
 		if (zero_bias_event)
@@ -1050,7 +1023,7 @@ int main(int argc, char **argv)
 		// data for alignment
 		// (SHOULD use hit positions WITHOUT alignment corrections, i.e. ev.h)
 		signed int period = int((ev.timestamp - anal.alignment_t0) / anal.alignment_ts);
-		if (detailsLevel >= 2)
+		if (detailsLevel >= 0)
 		{
 			if (g_w_vs_timestamp_sel.find(period) == g_w_vs_timestamp_sel.end())
 			{
@@ -1171,8 +1144,10 @@ int main(int argc, char **argv)
 
 		p_th_x_diffLR_vs_vtx_x->Fill(k.vtx_x, k.th_x_R - k.th_x_L);
 		
-		double safe_th_y_min = (anal.th_y_lcut_L + anal.th_y_lcut_R)/2. + 5E-6;
-		double safe_th_y_max = (anal.th_y_hcut_L + anal.th_y_hcut_R)/2. - 5E-6;
+		//double safe_th_y_min = (anal.th_y_lcut_L + anal.th_y_lcut_R)/2. + 5E-6;
+		//double safe_th_y_max = (anal.th_y_hcut_L + anal.th_y_hcut_R)/2. - 5E-6;
+		double safe_th_y_min = 220E-6;
+		double safe_th_y_max = 500E-6;
 		bool safe = fabs(k.th_y) > safe_th_y_min && fabs(k.th_y) < safe_th_y_max;
 
 		if (safe)
@@ -1197,8 +1172,6 @@ int main(int argc, char **argv)
 		}
 	
 		h_th_y_L_vs_th_y_R->Fill(k.th_y_R, k.th_y_L);
-		if (detailsLevel > 2)
-			g_th_y_L_vs_th_y_R->SetPoint(g_th_y_L_vs_th_y_R->GetN(), k.th_y_R, k.th_y_L);
 
 		h_th_x->Fill(k.th_x);
 		h_th_y->Fill(k.th_y);
@@ -1671,22 +1644,24 @@ int main(int argc, char **argv)
 		bh_t_normalized_unsmeared_rel_diff[bi] = MakeRelDiff(bh_t_normalized_unsmeared[bi]);
 		bh_t_normalized_unsmeared_rel_diff[bi]->SetName("h_t_eb_normalized_unsmeared_rel_diff");
 	}
-
 	// save histograms
 	TCanvas *c;
 	
 	gDirectory = outF->mkdir("metadata");
-
-	c = new TCanvas("rate cmp");
-	h_timestamp_dgn->Draw();
-	h_timestamp_B0->SetLineColor(4);
-	h_timestamp_B0->Draw("sames");
-	h_timestamp_sel->SetLineColor(2);
-	h_timestamp_sel->Draw("sames");
-	c->Write();
-
 	if (detailsLevel >= 2)
-	{	
+	{
+		h_timestamp_dgn->Write();
+		h_timestamp_B0->SetLineColor(4);
+		h_timestamp_B0->Write();
+		h_timestamp_sel->SetLineColor(2);
+		h_timestamp_sel->Write();
+
+		c = new TCanvas("rate cmp");
+		h_timestamp_dgn->Draw();
+		h_timestamp_B0->Draw("sames");
+		h_timestamp_sel->Draw("sames");
+		c->Write();
+	
 		//g_timestamp_vs_ev_idx_dgn->Write();
 		g_timestamp_vs_ev_idx_sel->Write();
 
@@ -1936,13 +1911,15 @@ int main(int argc, char **argv)
 	g_th_y_R_vs_th_x_R->Write();
 	g_th_y_vs_th_x->Write();
 	
+	h_th_y_L_vs_th_y_R->Write();
+	//g_th_y_L_vs_th_y_R->Write();
+
+	if (detailsLevel > 2)
 	{
 		c = new TCanvas();
 		c->SetLogz(1);
-		c->ToggleEventStatus();
-		c->SetCrosshair(1);
 		h_th_y_L_vs_th_y_R->Draw("colz");
-		g_th_y_L_vs_th_y_R->Draw("p");
+		//g_th_y_L_vs_th_y_R->Draw("p");
 		c->Write("canvas_th_y_L_vs_th_y_R");
 	}
 	

@@ -8,13 +8,13 @@ string topDir = "../../";
 string datasets[];
 string periods[];
 
-datasets.push("DS1"); periods.push("14316063");
-datasets.push("DS2"); periods.push("14316169");
-datasets.push("DS3"); periods.push("-272");
-datasets.push("DS4"); periods.push("0");
-datasets.push("DS5"); periods.push("127");
-datasets.push("DS6"); periods.push("276");
-datasets.push("DS7"); periods.push("398");
+datasets.push("DS1"); periods.push("70");
+datasets.push("DS2"); periods.push("177");
+datasets.push("DS3"); periods.push("293");
+datasets.push("DS4"); periods.push("565");
+datasets.push("DS5"); periods.push("734");
+datasets.push("DS6"); periods.push("842");
+datasets.push("DS7"); periods.push("970");
 
 string units[] = { "L_2_F", "L_2_N", "L_1_F", "R_1_F", "R_2_N", "R_2_F" };
 string unit_labels[] = { "left, 220, far", "left, 220, near", "left, 210, far", "right, 210, far", "right, 220, near", "right, 220, far" };
@@ -47,7 +47,7 @@ for (int dsi : datasets.keys)
 		draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/horizontal/horizontal profile/p|ff"), "l", red+1pt);
 		
 		limits((-30, -0.2), (+30, +0.2), Crop);
-		AttachLegend(unit_labels[ui], SE, SE);
+		AttachLegend(unit_labels[ui], NE, NE);
 	}
 	
 	//--------------------
@@ -62,22 +62,21 @@ for (int dsi : datasets.keys)
 		draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/y_hist|y_hist_range"), "d0,vl", red+1pt);
 	
 		limits((-30, 1), (+30, 5e4), Crop);
-		AttachLegend(unit_labels[ui], SE, SE);
+		AttachLegend(unit_labels[ui], NE, NE);
 	}
-	
 	
 	//--------------------
 	NewRow();
 	
 	for (int ui : units.keys)
 	{
-		NewPad("$\de y\ung{mm}$", "");
+		NewPad("bottom-RP $y$ shift$\ung{mm}$", "");
 		currentpad.xTicks = LeftTicks(0.5, 0.1);
 	
 		draw(rGetObj(topDir+dataset+"/alignment.root", period + "/unit "+units[ui]+"/vertical/g_max_diff"), "l,p", heavygreen, mCi+1pt+heavygreen);
 	
-		limits((-2, 0), (+2, 0.3), Crop);
-		AttachLegend(unit_labels[ui], SE, SE);
+		limits((-2.0, 0), (+2.0, 0.2), Crop);
+		AttachLegend(unit_labels[ui], NE, NE);
 	}
 
 	//--------------------

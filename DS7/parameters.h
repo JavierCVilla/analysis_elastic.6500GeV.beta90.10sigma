@@ -1,23 +1,23 @@
-#include "parameters_global.h"
+#include <string>
+#include <vector>
+#include <map>
+#include <cmath>
 
-double timestamp_min = 287.1E3, timestamp_max = 300.0E3;
+double timestamp0 = 1444860000;
+
+vector<AlignmentSource> alignmentSources;
+Analysis anal;
+Environment env;
+
+string unsmearing_file;
+string unsmearing_object;
+
+string luminosity_data_file;
+
+double alignment_c_exp_L=0., alignment_c_exp_R=0.;
 
 void Init_base()
 {
-	// load global settings
-	Init_global();
-
-	// directory for large-data storage (e.g. distilled ntuples)
-	storageDir = "root://eostotem.cern.ch//eos/totem/user/j/jkaspar/analyses/elastic/6500GeV,beta90,10sigma/DS7/";
-
-	// list of subdirectories with distilled ntuples
-	distilledNtuples.push_back("block1");
-	distilledNtuples.push_back("block2");
-	distilledNtuples.push_back("block3");
-	distilledNtuples.push_back("block4");
-	distilledNtuples.push_back("block5");
-	distilledNtuples.push_back("block6");
-
 	// selection of bunches
 	keepAllBunches = true;
 	//bunchMap[94882].push_back(0);
@@ -37,6 +37,33 @@ void Init_base()
 	alignmentSources.push_back(alSrc);
 	*/
 
+	// environment settings
+	env.InitNominal();
+
+	// binning
+	// TODO
+	anal.t_min = 0.; anal.t_max = 3.0;
+	anal.t_min_full = 0.; anal.t_max_full = 3.5;
+	
+	// approximate (time independent) resolutions
+	// TODO
+	anal.si_th_y_1arm = 1.7E-6 / sqrt(2.);
+	anal.si_th_y_1arm_unc = 0.E-6 / sqrt(2.);
+
+	anal.si_th_y_2arm = anal.si_th_y_1arm / sqrt(2.);
+	anal.si_th_y_2arm_unc = 0E-6;
+
+	anal.si_th_x_1arm_L = 8E-6;
+	anal.si_th_x_1arm_R = 8E-6;
+	anal.si_th_x_1arm_unc = 0E-6;
+
+	anal.si_th_x_2arm = 0E-6;
+	anal.si_th_x_2arm_unc = 0E-6;
+
+	// analysis settings
+	anal.th_x_lcut = -1.;	
+	anal.th_x_hcut = +1.;
+	
 #if 0
 	anal.use_time_dependent_resolutions = false;
 
@@ -67,6 +94,9 @@ void Init_base()
 	anal.alignmentYRanges["R_2_N"] = Analysis::AlignmentYRange(-20.5, - 7.6, 8.4, 20.8);
 	anal.alignmentYRanges["R_2_F"] = Analysis::AlignmentYRange(-23.0, - 8.4, 9.2, 24.0);
 
+	alignment_c_exp_L = -0.000;
+	alignment_c_exp_R = -0.050;
+
 #if 0
 	// TODO
 	unsmearing_file = "";	// diagonal dependent
@@ -83,16 +113,17 @@ void Init_base()
 
 void Init_45b_56t()
 {
-	Init_global_45b_56t();
-
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = +0.26E-6; anal.cut1_si = 9.5E-6;
-	anal.cut2_a = 1.; anal.cut2_c = +0.03E-6; anal.cut2_si = 2.8E-6;
+	anal.cut1_a = 1.; anal.cut1_c = +2.5E-6; anal.cut1_si = 9.5E-6;
+	anal.cut2_a = 1.; anal.cut2_c = -0.1E-6; anal.cut2_si = 2.8E-6;
 	
 	anal.cut5_a = 0.107200; anal.cut5_c = -0.010; anal.cut5_si = 0.016;
 	anal.cut6_a = 0.105559; anal.cut6_c = -0.002; anal.cut6_si = 0.019;
 
-	anal.cut7_a = 168.; anal.cut7_c = 0.; anal.cut7_si = 0.012;
+	anal.cut7_a = 168.; anal.cut7_c = 0.014; anal.cut7_si = 0.012;
+
+	anal.th_y_lcut_L = 28E-6; anal.th_y_lcut_R = 32E-6; anal.th_y_lcut = 34E-6;
+	anal.th_y_hcut_L = 104E-6; anal.th_y_hcut_R = 104E-6; anal.th_y_hcut = 102E-6;
 
 #if 0
 	// TODO
@@ -109,16 +140,17 @@ void Init_45b_56t()
 
 void Init_45t_56b()
 {
-	Init_global_45t_56b();
-
 	// analysis settings
-	anal.cut1_a = 1.; anal.cut1_c = +0.30E-6; anal.cut1_si = 10.0E-6;
-	anal.cut2_a = 1.; anal.cut2_c = +0.20E-6; anal.cut2_si = 2.8E-6;
+	anal.cut1_a = 1.; anal.cut1_c = -2.6E-6; anal.cut1_si = 10.0E-6;
+	anal.cut2_a = 1.; anal.cut2_c = -0.0E-6; anal.cut2_si = 2.8E-6;
 	
 	anal.cut5_a = 0.10671; anal.cut5_c = -0.009; anal.cut5_si = 0.018;
 	anal.cut6_a = 0.10564; anal.cut6_c = +0.006; anal.cut6_si = 0.018;
 
-	anal.cut7_a = 169.; anal.cut7_c = 0.; anal.cut7_si = 0.012;
+	anal.cut7_a = 169.; anal.cut7_c = +0.014; anal.cut7_si = 0.012;
+
+	anal.th_y_lcut_L = 25.5E-6; anal.th_y_lcut_R = 27.2E-6; anal.th_y_lcut = 28.2E-6;
+	anal.th_y_hcut_L = 104E-6; anal.th_y_hcut_R = 104E-6; anal.th_y_hcut = 102E-6;
 
 #if 0
 	// TODO

@@ -9,8 +9,10 @@ using namespace std;
 
 int main()
 {
-	// get input
-	TFile *f_in = new TFile("../DS4/alignment_fit.root");
+	// settings
+	vector<string> datasets = { "DS1", "DS2", "DS3", "DS4", "DS5", "DS6", "DS7" };
+	
+	vector<string> quantities = { "a", "b", "c" };
 
 	// select units
 	vector<string> units = {
@@ -22,23 +24,29 @@ int main()
 		"R_2_F"
 	};
 	
-	vector<string> quantities = { "a", "b", "c" };
-
 	// print results
-	for (const auto &unit : units)
+	for (const auto &dataset : datasets)
 	{
-		//printf(">> %s\n", unit.c_str());
-		printf("\n");
+		printf("\n#-------------------- %s --------------------\n", dataset.c_str());
 
-		for (const auto &q : quantities)
+		// get input
+		TFile *f_in = new TFile(("../" + dataset + "/alignment_fit.root").c_str());
+
+		for (const auto &unit : units)
 		{
-			TGraph *g1 = (TGraph *) f_in->Get((unit + "/" + q + "_fit").c_str());
-			double t, v;
-			g1->GetPoint(0, t, v);
-
-			printf("%s_%s=\"%.1f\"\n", unit.c_str(), q.c_str(), v);
+			//printf(">> %s\n", unit.c_str());
+			printf("\n");
+	
+			for (const auto &q : quantities)
+			{
+				TGraph *g1 = (TGraph *) f_in->Get((unit + "/" + q + "_fit").c_str());
+				double t, v;
+				g1->GetPoint(0, t, v);
+	
+				printf("%s_%s=\"%+.1f\"\n", unit.c_str(), q.c_str(), v);
+			}
 		}
+	
+		delete f_in;	
 	}
-
-	delete f_in;	
 }

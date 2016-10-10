@@ -66,98 +66,194 @@ Kinematics DoReconstruction(const HitData &h, const Environment & env)
 
 //----------------------------------------------------------------------------------------------------
 
-void BuildBinning(const Analysis &anal, const string &type, double* &binEdges, unsigned int &bins,
-		bool verbose = false)
+void BuildBinning(const Analysis &anal, const string &type, double* &binEdges, unsigned int &bins)
 {
+	bool verbose = false;
+
 	if (verbose)
 		printf(">> BuildBinning(%s)\n", type.c_str());
-	
-	std::vector<double> be;
-	double w;
 
-	// same as in the low-|t| analysis
+	std::vector<double> be;
+
+	// low-|t| part
+	double t = anal.t_min;
+
+	// central part
 	if (type.compare("ub") == 0)
 	{
-		w = 2E-3;
-		double t = 0.;
-		while (t < anal.t_max_full)
-		{
+		double w = 2E-3;
+		for (; t <= anal.t_max; t += w)
 			be.push_back(t);
-			t += w;
-		}
-
-		bins = be.size() - 1;
-		binEdges = new double[bins + 1];
-		for (unsigned int i = 0; i <= bins; i++)
-			binEdges[i] = be[i];
-
-		return;
 	}
 
-	// between t_min_full and t_min
-	unsigned int N_bins_low = 4;
-	w = (anal.t_min - anal.t_min_full) / N_bins_low;
-	for (unsigned int i = 0; i < N_bins_low; i++)
-		be.push_back(anal.t_min_full + w * i);
-
-	// between t_min and t_max
-	unsigned int N_bins_cen = 200;
+	if (type.compare("ub-90m") == 0)
+	{
+		unsigned int N_bins_cen = 200;
+		double t_min_90 = 0.;
+		double t_max_90 = 1.4;
+		double w = (t_max_90 - t_min_90) / N_bins_cen;
+		for (unsigned int i = 0; i < N_bins_cen; i++)
+		{
+			t = t_min_90 + w * i;
+			if (t > anal.t_max)
+				break;
+			be.push_back(t);
+		}
+	}
 	
 	if (type.compare("eb") == 0)
 	{
-		double B = 3.;
-		for (unsigned int bi = 0; bi < N_bins_cen; bi++)
-			be.push_back( - log( (1. - double(bi) / N_bins_cen) * exp(-B*anal.t_min) + double(bi) * exp(-B*anal.t_max) / N_bins_cen ) / B );
+		double w = 0.2E-3;
+		for (; t < 0.6E-3; t += w)
+			be.push_back(t);
+		
+		w = 0.2E-3;
+		for (; t < 0.02; t += w)
+			be.push_back(t);
+
+		for (; t < anal.t_max; t += w)
+		{
+			be.push_back(t);
+			w *= 1.05;
+		}
 	}
 
-	if (type.find("ob") == 0)
+	if (type.compare("ob-0-1") == 0)
 	{
-		// extract parameters
-		size_t p1 = type.find("-", 0);
-		size_t p2 = type.find("-", p1 + 1);
-		size_t p3 = type.find("-", p2 + 1);
-		
-		double n_smearing_sigmas = atof(type.substr(p1+1, p2-p1-1).c_str());
-		string stat_unc_label = type.substr(p2+1, p3-p2-1);
-		double bs_max = atof(type.substr(p3+1).c_str());
-
-		// load generators
-		TFile *f_in = TFile::Open("/afs/cern.ch/work/j/jkaspar/analyses/elastic/6500GeV,beta90,10sigma/binning/generators.root");
-		//TFile *f_in = TFile::Open((path_prefix + "../binning/generators.root").c_str());
-		TGraph *g_rms_t = (TGraph *) f_in->Get("g_rms_t");
-		TGraph *g_bs_fsu = (TGraph *) f_in->Get( ("g_bs_stat_unc_" + stat_unc_label).c_str() );
-
 		double t = anal.t_min;
 		while (t < anal.t_max)
 		{
 			be.push_back(t);
 
-			double w = max(n_smearing_sigmas * g_rms_t->Eval(t), g_bs_fsu->Eval(t));
-			double t_c = t + w/2.;
-			w = max(n_smearing_sigmas * g_rms_t->Eval(t_c), g_bs_fsu->Eval(t_c));
-			if (w > bs_max)
-				w = bs_max;
+			double w = 0.01;
+			if (t >= 0.00) w = 2E-4;
+			if (t >= 5E-4) w = (t - 0.00) / (0.01 - 0.00) * (0.0037 - 0.0001) + 0.0001;
+			if (t >= 0.01) w = (t - 0.01) / (0.06 - 0.01) * (0.0100 - 0.0037) + 0.0037;
+			if (t >= 0.06) w = 0.01;
 
 			t += w;
 		}
-
-		delete f_in;
 	}
 
-	// between t_max and t_max_full
-	unsigned int N_bins_high = 4;
-	w = (anal.t_max_full - anal.t_max) / N_bins_high;
+	if (type.compare("ob-1-4") == 0)
+	{
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+
+			double w = 0.01;
+			if (t >= 0.00) w = 2E-4;
+			if (t >= 5E-4) w = 2.68E-3 * sqrt(t);
+			if (t >= 0.06) w = 1.37E-4 * exp(26.82 * t);
+			if (t >= 0.16) w = 0.01;
+
+			t += w;
+		}
+	}
+
+	if (type.compare("ob-3-4") == 0)
+	{
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+
+			double w = 0.01;
+			if (t >= 0.00) w = 2E-4;
+			if (t >= 5E-4) w = 2.68E-3 * sqrt(t);
+			if (t >= 2E-3) w = 2.68E-3 * (1. + (t - 2E-3) / 2E-3 * 2.) * sqrt(t);
+			if (t >= 4E-3) w = 2.68E-3*3. * sqrt(t);
+			if (t >= 0.115) w = 1.37E-4 * exp(26.82 * t);
+			if (t >= 0.16) w = 0.01;
+
+			t += w;
+		}
+	}
+
+	if (type.compare("ob-5-4") == 0)
+	{
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+
+			double w = 0.01;
+			if (t >= 0.00) w = 2E-4;
+			if (t >= 5E-4) w = 2.68E-3 * sqrt(t);
+			if (t >= 2E-3) w = 2.68E-3 * (1. + (t - 2E-3) / 2E-3 * 4.) * sqrt(t);
+			if (t >= 4E-3) w = 2.68E-3*5. * sqrt(t);
+			if (t >= 0.14) w = 1.37E-4 * exp(26.82 * t);
+			if (t >= 0.16) w = 0.01;
+
+			t += w;
+		}
+	}
+
+	if (type.compare("ob-0.2-10") == 0)
+	{
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+			
+			double w = 0.01;
+			if (t >= 0.00) w = 2E-4;
+			if (t >= 5E-4) w = 2.68E-3 * 0.2 * sqrt(t);
+			if (t >= 0.077) w = 1E-4 * exp(-6.56*t + 150.*t*t);
+			if (t >= 0.19) w = 0.01;
+
+			t += w;
+		}
+	}
+
+	if (type.compare("ob-0.5-10") == 0)
+	{
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+			
+			double w = 0.01;
+			if (t >= 0.00) w = 2E-4;
+			if (t >= 5E-4) w = 2.68E-3 * 0.5 * sqrt(t);
+			if (t >= 0.126) w = 1E-4 * exp(-6.56*t + 150.*t*t);
+			if (t >= 0.19) w = 0.01;
+
+			t += w;
+		}
+	}
+
+	if (type.compare("ob-1-10") == 0)
+	{
+		double t = anal.t_min;
+		while (t < anal.t_max)
+		{
+			be.push_back(t);
+			
+			double w = 0.01;
+			if (t >= 0.00) w = 2E-4;
+			if (t >= 5E-4) w = 2.68E-3 * sqrt(t);
+			if (t >= 0.15) w = 1E-4 * exp(-6.56*t + 150.*t*t);
+			if (t >= 0.19) w = 0.01;
+
+			t += w;
+		}
+	}
+
+	// high-|t| part
+	unsigned int N_bins_high = 10;
+	double w = (anal.t_max_full - anal.t_max) / N_bins_high;
 	for (unsigned int i = 0; i <= N_bins_high; i++)
 		be.push_back(anal.t_max + w * i);
 
-	// return results
 	bins = be.size() - 1;
 	binEdges = new double[be.size()];
 	for (unsigned int i = 0; i < be.size(); i++)
 	{
 		binEdges[i] = be[i];
 		if (verbose)
-			printf("\tbi = %4u: %.4E\n", i, binEdges[i]);
+			printf("\tbi = %u: %.2E\n", i, binEdges[i]);
 	}
 }
 

@@ -15,46 +15,23 @@
 #include "TotemAnalysis/TotemNtuplizer/interface/RawDataFormats.h"
 #include "TotemAnalysis/TotemNtuplizer/interface/RPRootTrackInfo.h"
 
-#include <csignal>
-
 using namespace std;
-
-//----------------------------------------------------------------------------------------------------
-
-bool interrupt_loop = false;
-
-void SigIntHandler(int)
-{
-	interrupt_loop = true;
-}
-
-//----------------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv)
 {
 	if (argc != 2)
-	{
-		printf("ERROR: missing argument (diagonal).\n");
 		return 1;
-	}
 
 	Init(argv[1]);
-	if (diagonal == dUnknown)
-	{
-		printf("ERROR: unknown diagonal %s\n", argv[1]);
-		return 1;
-	}
-
 	if (diagonal == dCombined)
 		return rcIncompatibleDiagonal;
 
 	InitInputFiles();
 	TChain *ch = new TChain("TotemNtuple");
-	printf(">> input files\n");
 	for (unsigned int i = 0; i < input_files.size(); i++)
 	{
 		ch->Add(input_files[i].c_str());
-		printf("    %s\n", input_files[i].c_str());
+		printf("+ %s\n", input_files[i].c_str());
 	}
 	printf(">> chain entries: %llu\n", ch->GetEntries());
 
@@ -143,11 +120,7 @@ int main(int argc, char **argv)
 	*/
 
 	// ouput file
-	// TODO: solve
-	//string fn_out = storageDir + "/distill_" + argv[1] + "_new.root";
-	string fn_out = string("distill_") + argv[1] + "_new.root";
-	printf(">> output file: %s\n", fn_out.c_str());
-	TFile *f_out = TFile::Open(fn_out.c_str(), "recreate");
+	TFile *outF = new TFile((string("distill_") + argv[1] + "_new.root").c_str(), "recreate");
 
 	// set up output tree
 	EventRed ev;
@@ -170,11 +143,7 @@ int main(int argc, char **argv)
 
 	// loop over the chain entries
 	long int evi = 0;
-	long int nDistilledEvents = 0;
-
-	signal(SIGINT, SigIntHandler);
-
-	for (; evi < ch->GetEntries() && !interrupt_loop; evi++)
+	for (; evi < ch->GetEntries(); evi++)
 	{
 		ch->GetEvent(evi);
 
@@ -186,6 +155,7 @@ int main(int argc, char **argv)
 		ev.h.R_2_N.v = rp_R_2_N->valid; ev.h.R_2_N.x = rp_R_2_N->x; ev.h.R_2_N.y = rp_R_2_N->y;
 		ev.h.R_2_F.v = rp_R_2_F->valid; ev.h.R_2_F.x = rp_R_2_F->x; ev.h.R_2_F.y = rp_R_2_F->y;
 
+		/*
 		unsigned N_L = 0;
 		if (ev.h.L_1_F.v) N_L++;
 		if (ev.h.L_2_N.v) N_L++;
@@ -195,12 +165,11 @@ int main(int argc, char **argv)
 		if (ev.h.R_1_F.v) N_R++;
 		if (ev.h.R_2_N.v) N_R++;
 		if (ev.h.R_2_F.v) N_R++;
+		*/
 
-		bool save = (N_L >= 2 && N_R >= 2);
+		bool save = (ev.h.L_2_N.v && ev.h.L_2_F.v && ev.h.R_2_N.v && ev.h.R_2_F.v);
 		if (!save)
 			continue;
-
-		nDistilledEvents++;
 
 		ev.timestamp = metaData->timestamp - timestamp0;
 		ev.run_num = metaData->run_no;
@@ -211,18 +180,11 @@ int main(int argc, char **argv)
 
 		outT->Fill();
 	}
-
-	if (interrupt_loop)
-		printf("WARNING: User interrupt!\n");
-
 	printf(">> last event number: %li\n", evi);
-
-	printf("\n");
-	printf(">> distilled events: %li\n", nDistilledEvents);
 
 	// save output tree
 	outT->Write();
 
-	delete f_out;
+	delete outF;
 	return 0;
 }

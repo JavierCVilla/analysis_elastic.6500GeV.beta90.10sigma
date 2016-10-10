@@ -378,9 +378,8 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 	//double s_min = -2.0, s_max = 2.0;
 	//double s_step = 0.2;
 	
-	double s_exp = 2. * c_exp + y_min_b - y_min_t;
+	double s_exp = 2. * c_exp - (y_min_t - y_min_b);
 	double s_min = s_exp - 0.3, s_max = s_exp + 0.3;
-	//double s_step = 0.1;
 	double s_step = 0.02;
 
 	printf("\tshift range: %.2E to %.2E, shift step = %.2E\n", s_min, s_max, s_step);
@@ -603,7 +602,7 @@ void DoVerticalAlignment(TGraph *g_t, TGraph *gw_t, TGraph *g_b, TGraph *gw_b,
 		for (vector< pair<double, unsigned int> >::iterator it = ipa.begin(); it != ipa.end(); ++it)
 		{
 			unsigned int num = it->second;
-			double y = it->first;
+			//double y = it->first;
 
 			if ((num & 0x1) > 0)
 				idx_t++;
@@ -799,13 +798,13 @@ int main(int argc, char **argv)
 
 	vector<string> units;
 	vector<double> deYExp;	// expected value of de_y in mm
-	units.push_back("L_2_F"); deYExp.push_back(0.);
-	units.push_back("L_2_N"); deYExp.push_back(0.);
-	units.push_back("L_1_F"); deYExp.push_back(0.);
+	units.push_back("L_2_F"); deYExp.push_back(alignment_c_exp_L);
+	units.push_back("L_2_N"); deYExp.push_back(alignment_c_exp_L);
+	units.push_back("L_1_F"); deYExp.push_back(alignment_c_exp_L);
 
-	units.push_back("R_1_F"); deYExp.push_back(0.);
-	units.push_back("R_2_N"); deYExp.push_back(0.);
-	units.push_back("R_2_F"); deYExp.push_back(0.);
+	units.push_back("R_1_F"); deYExp.push_back(alignment_c_exp_R);
+	units.push_back("R_2_N"); deYExp.push_back(alignment_c_exp_R);
+	units.push_back("R_2_F"); deYExp.push_back(alignment_c_exp_R);
 
 	// get list of periods
 	vector<signed int> periods;
@@ -825,7 +824,7 @@ int main(int argc, char **argv)
 	for (unsigned int pi = 0; pi < periods.size(); pi++)
 	{
 		// TODO: remove
-		//if (pi > 2)
+		//if (pi > 4)
 		//	break;
 
 		printf("\n\n************************************************** period %i **************************************************\n", periods[pi]);
