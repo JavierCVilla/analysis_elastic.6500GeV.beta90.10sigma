@@ -18,5 +18,3 @@ PROMPT_COMMAND="CalculatePrompt"
 export PS1="\[\033[00;34m\]${compName} \[\033[00;33m\]${CMSSW_VERSION}\[\033[00;32m\] \$cwd> \[\033[00m\]"
 
 cd "$cwd"
-
-echo "CMSSW_BASE=$CMSSW_BASE"
