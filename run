@@ -87,14 +87,8 @@ function RunOneDir()
 	cd "$dir"
 	
 	echo "$tag @ $dir > compiling"
-	g++ -O3 -Wall -Wextra -Werror --std=c++11\
-			-I"$top_dir" \
-			`root-config --libs` -lMinuit -lMinuit2 `root-config --cflags` \
-			-I"$CMSSW_BASE/src" \
-			-I"/cvmfs/cms.cern.ch/slc6_amd64_gcc481/external/fastjet/3.0.3/include" \
-			-L"$CMSSW_BASE/lib/slc6_amd64_gcc481" \
-			-lTotemAnalysisTotemNtuplizer \
-			"$src_file" -o "$exe_file" &> "$tag.log_compile"
+        rootcling -f $top_dir/TotemAnalysis/TotemNtuplizer/TotemEvent.cxx -I$top_dir -c $top_dir/TotemAnalysis/TotemNtuplizer/interface/RawDataFormats.h $top_dir/TotemAnalysis/TotemNtuplizer/interface/RPRootTrackInfo.h $top_dir/TotemAnalysis/TotemNtuplizer/interface/TriggerDataFormats.h $top_dir/TotemAnalysis/TotemNtuplizer/interface/LinkDef.h
+        g++ -O3 -Wall -I"$top_dir" `root-config --libs` -lMinuit -lMinuit2 `root-config --cflags` $top_dir/TotemAnalysis/TotemNtuplizer/TotemEvent.cxx "$src_file" -o "$exe_file" &> "$tag.log_compile"
 
 	# compilation error?
  	if [ $? -ne 0 ]
