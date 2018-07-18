@@ -8,7 +8,17 @@ ssh lgrzanka@lxplus7.cern.ch
 git clone https://github.com/grzanka/analysis_elastic.6500GeV.beta90.10sigma.git
 cd analysis_elastic.6500GeV.beta90.10sigma/
 git checkout removing_cmssw_deps
+```
+
+Adjust EOS path (`storageDir`) in `DS1/parameters.h` and `DS1/block1/parameters.h`.
+
+```
 ./run distill.cc DS1/block1/
+```
+
+Adjust hardcoded path to `generators.root` in `common_algorithms.h` (around line 125).
+
+```
 ./run distributions.cc DS1
 ```
 
