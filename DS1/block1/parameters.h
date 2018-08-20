@@ -5,7 +5,7 @@
 void Init_additional()
 {
 	// directory for large-data storage (e.g. distilled ntuples)
-	storageDir = "root://eostotem.cern.ch//eos/totem/user/j/jkaspar/analyses/elastic/6500GeV,beta90,10sigma/DS1/block1/";
+	storageDir = "{PWD}/DS1/block1/";
 
 	// reset list of subdirectories with distilled ntuples
 	distilledNtuples.clear();

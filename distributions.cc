@@ -298,7 +298,7 @@ int main(int argc, char **argv)
 	printf(">> input chain\n");
 	for (const auto &ntupleDir : distilledNtuples)
 	{
-		string f = storageDir + "/" + ntupleDir + "/distill_" + argv[1] + ".root";
+		string f = storageDir + "/distill_" + argv[1] + "_new.root";
 		printf("+ %s\n", f.c_str());
 		ch_in->Add(f.c_str());
 	}

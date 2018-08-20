@@ -37,7 +37,7 @@ void InitInputFiles()
 	}
 	*/
 
-	std::string prefix = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4496/";
+	std::string prefix = "{DATAPATH}/4496/";
 	input_files.push_back(prefix + "TotemNTuple_9893.000.ntuple.root");
 	input_files.push_back(prefix + "TotemNTuple_9893.001.ntuple.root");
 	input_files.push_back(prefix + "TotemNTuple_9893.002.ntuple.root");
