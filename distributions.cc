@@ -915,23 +915,24 @@ int main(int argc, char **argv)
 			if (cd.ct[ci])
 				n_ev_cut[ci]++;
 		}
-		
+	
+	   // OMITTED
 		// fill background distributions
-		for (unsigned int qi = 1; qi <= anal.N_cuts; ++qi)
-		{
-			bool reduced_select = true;
-			for (unsigned int i = 0; i < anal.cuts.size(); i++)
-			{
-				unsigned int ci = anal.cuts[i];
-				if (ci != qi)
-					reduced_select &= cd.ct[ci];
-			}
+		//for (unsigned int qi = 1; qi <= anal.N_cuts; ++qi)
+		//{
+		//	bool reduced_select = true;
+		//	for (unsigned int i = 0; i < anal.cuts.size(); i++)
+		//	{
+		//		unsigned int ci = anal.cuts[i];
+		//		if (ci != qi)
+		//			reduced_select &= cd.ct[ci];
+		//	}
 
-			/*
-			if (reduced_select)
-				hb_cq[qi]->Fill(cd.cv[qi] / anal.csi[qi]);
-			*/
-		}
+		//	/*
+		//	if (reduced_select)
+		//		hb_cq[qi]->Fill(cd.cv[qi] / anal.csi[qi]);
+		//	*/
+		//}
 
 		/*
 		if (bckg) {
@@ -953,13 +954,14 @@ int main(int argc, char **argv)
 			hb_th_x_L_vs_th_x_R->Fill(th_x_R, th_x_L);
 		}
 		*/
-		
+	
+      // OMITTED	
 		// fill no-cut histograms
-		for (unsigned int ci = 1; ci <= anal.N_cuts; ++ci)
-		{
-			//h2_cq_full[ci]->Fill(ccb[ci]*cqa[ci] - cca[ci]*cqb[ci], cca[ci]*cqa[ci] + ccb[ci]*cqb[ci] + ccc[ci]);
-			h2_cq_full[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
-		}
+		//for (unsigned int ci = 1; ci <= anal.N_cuts; ++ci)
+		//{
+		//	//h2_cq_full[ci]->Fill(ccb[ci]*cqa[ci] - cca[ci]*cqb[ci], cca[ci]*cqa[ci] + ccb[ci]*cqb[ci] + ccc[ci]);
+		//	h2_cq_full[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
+		//}
 		
 		/*
 		bool select_6cut = true;
@@ -985,7 +987,7 @@ int main(int argc, char **argv)
 		if (maxTaggedEvents > 0 && N_el > maxTaggedEvents)
 			break;
 
-		g_selected_bunch_num_vs_timestamp->SetPoint(g_selected_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
+		//g_selected_bunch_num_vs_timestamp->SetPoint(g_selected_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
 
 		// fill zero-bias plots
 		if (zero_bias_event)
@@ -1008,31 +1010,31 @@ int main(int argc, char **argv)
 		N_el_raw++;
 		
 		// check event group
-		if (event_group_divisor > 0)
-		{
-			int event_group = (N_el_raw-1) / event_group_divisor;
-			if (event_group < event_group_index)
-				continue;
-			if (event_group > event_group_index)
-				break;
-		}
+		//if (event_group_divisor > 0)
+		//{
+		//	int event_group = (N_el_raw-1) / event_group_divisor;
+		//	if (event_group < event_group_index)
+		//		continue;
+		//	if (event_group > event_group_index)
+		//		break;
+		//}
 
 		// determine normalization factors (luminosity + corrections)
-		double inefficiency_3outof4 = anal.inefficiency_3outof4;
-		if (anal.use_3outof4_efficiency_fits)
-		{
-			inefficiency_3outof4 = 0.;
-			inefficiency_3outof4 += 1. - f_3outof4_efficiency_L_F->Eval(k.th_y * 1E6);
-			inefficiency_3outof4 += 1. - f_3outof4_efficiency_L_N->Eval(k.th_y * 1E6);
-			inefficiency_3outof4 += 1. - f_3outof4_efficiency_R_N->Eval(k.th_y * 1E6);
-			inefficiency_3outof4 += 1. - f_3outof4_efficiency_R_F->Eval(k.th_y * 1E6);
-		}
+		//double inefficiency_3outof4 = anal.inefficiency_3outof4;
+		//if (anal.use_3outof4_efficiency_fits)
+		//{
+		//	inefficiency_3outof4 = 0.;
+		//	inefficiency_3outof4 += 1. - f_3outof4_efficiency_L_F->Eval(k.th_y * 1E6);
+		//	inefficiency_3outof4 += 1. - f_3outof4_efficiency_L_N->Eval(k.th_y * 1E6);
+		//	inefficiency_3outof4 += 1. - f_3outof4_efficiency_R_N->Eval(k.th_y * 1E6);
+		//	inefficiency_3outof4 += 1. - f_3outof4_efficiency_R_F->Eval(k.th_y * 1E6);
+		//}
 
-		double inefficiency_shower_near = anal.inefficiency_shower_near;
+		//double inefficiency_shower_near = anal.inefficiency_shower_near;
 
-		double inefficiency_pile_up = anal.inefficiency_pile_up;
-		if (anal.use_pileup_efficiency_fits)
-			inefficiency_pile_up = corrg_pileup->Eval(ev.timestamp);
+		//double inefficiency_pile_up = anal.inefficiency_pile_up;
+		//if (anal.use_pileup_efficiency_fits)
+		//	inefficiency_pile_up = corrg_pileup->Eval(ev.timestamp);
 
 		double inefficiency_trigger = anal.inefficiency_trigger;
 
@@ -1041,71 +1043,71 @@ int main(int argc, char **argv)
 			* 1./(1. - inefficiency_pile_up)
 			* 1./(1. - inefficiency_trigger);
 
-		p_norm_corr->Fill(ev.timestamp, norm_corr);
-		p_3outof4_corr->Fill(k.th_y, inefficiency_3outof4);
+		//p_norm_corr->Fill(ev.timestamp, norm_corr);
+		//p_3outof4_corr->Fill(k.th_y, inefficiency_3outof4);
 
 		// TODO: add inefficiency_DAQ
 		double normalization = anal.bckg_corr * norm_corr / anal.L_int;
 
 		// data for alignment
 		// (SHOULD use hit positions WITHOUT alignment corrections, i.e. ev.h)
-		signed int period = int((ev.timestamp - anal.alignment_t0) / anal.alignment_ts);
-		if (detailsLevel >= 2)
-		{
-			if (g_w_vs_timestamp_sel.find(period) == g_w_vs_timestamp_sel.end())
-			{
-				g_w_vs_timestamp_sel[period] = new TGraph();
+	//	signed int period = int((ev.timestamp - anal.alignment_t0) / anal.alignment_ts);
+	//	if (detailsLevel >= 2)
+	//	{
+	//		if (g_w_vs_timestamp_sel.find(period) == g_w_vs_timestamp_sel.end())
+	//		{
+	//			g_w_vs_timestamp_sel[period] = new TGraph();
 
-				g_y_L_1_F_vs_x_L_1_F_sel[period] = new TGraph();
-				g_y_L_2_N_vs_x_L_2_N_sel[period] = new TGraph();
-				g_y_L_2_F_vs_x_L_2_F_sel[period] = new TGraph();
+	//			g_y_L_1_F_vs_x_L_1_F_sel[period] = new TGraph();
+	//			g_y_L_2_N_vs_x_L_2_N_sel[period] = new TGraph();
+	//			g_y_L_2_F_vs_x_L_2_F_sel[period] = new TGraph();
 
-				g_y_R_1_F_vs_x_R_1_F_sel[period] = new TGraph();
-				g_y_R_2_N_vs_x_R_2_N_sel[period] = new TGraph();
-				g_y_R_2_F_vs_x_R_2_F_sel[period] = new TGraph();
+	//			g_y_R_1_F_vs_x_R_1_F_sel[period] = new TGraph();
+	//			g_y_R_2_N_vs_x_R_2_N_sel[period] = new TGraph();
+	//			g_y_R_2_F_vs_x_R_2_F_sel[period] = new TGraph();
 
-				tm_h_th_x_L[period] = new TH1D("", ";#theta_{x}^{L}", 100, -150E-6, +150E-6);
-				tm_h_th_x_R[period] = new TH1D("", ";#theta_{x}^{R}", 100, -150E-6, +150E-6);
+	//			tm_h_th_x_L[period] = new TH1D("", ";#theta_{x}^{L}", 100, -150E-6, +150E-6);
+	//			tm_h_th_x_R[period] = new TH1D("", ";#theta_{x}^{R}", 100, -150E-6, +150E-6);
 
-				tm_p_diffLR_th_x[period] = new TProfile("", ";#theta_{x}   (#murad);#Delta^{R-L} #theta_{x}   (#murad)", 300, -300E-6, +300E-6);
-				tm_p_diffLR_th_y[period] = new TProfile("", ";#theta_{y}   (#murad);#Delta^{R-L} #theta_{y}   (#murad)", 200, -500E-6, +500E-6);
+	//			tm_p_diffLR_th_x[period] = new TProfile("", ";#theta_{x}   (#murad);#Delta^{R-L} #theta_{x}   (#murad)", 300, -300E-6, +300E-6);
+	//			tm_p_diffLR_th_y[period] = new TProfile("", ";#theta_{y}   (#murad);#Delta^{R-L} #theta_{y}   (#murad)", 200, -500E-6, +500E-6);
 
-				tm_p_x_L_F_vs_th_x_L[period] = new TProfile("", ";#theta_{x}^{L}   (#murad);x^{LF}   (mm)", 200, -200E-6, +200E-6);
-				tm_p_x_R_F_vs_th_x_R[period] = new TProfile("", ";#theta_{x}^{R}   (#murad);x^{RF}   (mm)", 200, -200E-6, +200E-6);
-			}
-	
-			int idx = g_w_vs_timestamp_sel[period]->GetN();
-			g_w_vs_timestamp_sel[period]->SetPoint(idx, ev.timestamp, norm_corr);
-			
-			g_y_L_1_F_vs_x_L_1_F_sel[period]->SetPoint(idx, ev.h.L_1_F.x, ev.h.L_1_F.y);
-			g_y_L_2_N_vs_x_L_2_N_sel[period]->SetPoint(idx, ev.h.L_2_N.x, ev.h.L_2_N.y);
-			g_y_L_2_F_vs_x_L_2_F_sel[period]->SetPoint(idx, ev.h.L_2_F.x, ev.h.L_2_F.y);
+	//			tm_p_x_L_F_vs_th_x_L[period] = new TProfile("", ";#theta_{x}^{L}   (#murad);x^{LF}   (mm)", 200, -200E-6, +200E-6);
+	//			tm_p_x_R_F_vs_th_x_R[period] = new TProfile("", ";#theta_{x}^{R}   (#murad);x^{RF}   (mm)", 200, -200E-6, +200E-6);
+	//		}
+	//
+	//		int idx = g_w_vs_timestamp_sel[period]->GetN();
+	//		g_w_vs_timestamp_sel[period]->SetPoint(idx, ev.timestamp, norm_corr);
+	//		
+	//		g_y_L_1_F_vs_x_L_1_F_sel[period]->SetPoint(idx, ev.h.L_1_F.x, ev.h.L_1_F.y);
+	//		g_y_L_2_N_vs_x_L_2_N_sel[period]->SetPoint(idx, ev.h.L_2_N.x, ev.h.L_2_N.y);
+	//		g_y_L_2_F_vs_x_L_2_F_sel[period]->SetPoint(idx, ev.h.L_2_F.x, ev.h.L_2_F.y);
 
-			g_y_R_1_F_vs_x_R_1_F_sel[period]->SetPoint(idx, ev.h.R_1_F.x, ev.h.R_1_F.y);
-			g_y_R_2_N_vs_x_R_2_N_sel[period]->SetPoint(idx, ev.h.R_2_N.x, ev.h.R_2_N.y);
-			g_y_R_2_F_vs_x_R_2_F_sel[period]->SetPoint(idx, ev.h.R_2_F.x, ev.h.R_2_F.y);
-		}
+	//		g_y_R_1_F_vs_x_R_1_F_sel[period]->SetPoint(idx, ev.h.R_1_F.x, ev.h.R_1_F.y);
+	//		g_y_R_2_N_vs_x_R_2_N_sel[period]->SetPoint(idx, ev.h.R_2_N.x, ev.h.R_2_N.y);
+	//		g_y_R_2_F_vs_x_R_2_F_sel[period]->SetPoint(idx, ev.h.R_2_F.x, ev.h.R_2_F.y);
+	//	}
 
 		// fill raw histograms
-		h_timestamp_sel->Fill(ev.timestamp);
-		if (detailsLevel >= 2)
-		{
-			g_timestamp_vs_ev_idx_sel->SetPoint(g_timestamp_vs_ev_idx_sel->GetN(), ev_idx, ev.timestamp);
-			g_bunch_num_vs_timestamp->SetPoint(g_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
-		}
-		
-		for (unsigned int ci = 1; ci <= anal.N_cuts; ++ci)
-		{
-			h_cq[ci]->Fill(cd.cv[ci]);
-			h2_cq[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
-			//h2_cq[ci]->Fill(ccb[ci]*cqa[ci] - cca[ci]*cqb[ci], cca[ci]*cqa[ci] + ccb[ci]*cqb[ci] + ccc[ci]);
-			/*
-			if (detailsLevel >= 2)
-				g_cq[ci]->SetPoint(g_cq[ci]->GetN(), cd.cqa[ci], cd.cqb[ci]);
-			*/
-			p_cq[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
-			p_cq_time[ci]->Fill(ev.timestamp, cd.cv[ci]);
-		}
+	//	h_timestamp_sel->Fill(ev.timestamp);
+	//	if (detailsLevel >= 2)
+	//	{
+	//		g_timestamp_vs_ev_idx_sel->SetPoint(g_timestamp_vs_ev_idx_sel->GetN(), ev_idx, ev.timestamp);
+	//		g_bunch_num_vs_timestamp->SetPoint(g_bunch_num_vs_timestamp->GetN(), ev.timestamp, ev.bunch_num);
+	//	}
+	//	
+	//	for (unsigned int ci = 1; ci <= anal.N_cuts; ++ci)
+	//	{
+	//		h_cq[ci]->Fill(cd.cv[ci]);
+	//		h2_cq[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
+	//		//h2_cq[ci]->Fill(ccb[ci]*cqa[ci] - cca[ci]*cqb[ci], cca[ci]*cqa[ci] + ccb[ci]*cqb[ci] + ccc[ci]);
+	//		/*
+	//		if (detailsLevel >= 2)
+	//			g_cq[ci]->SetPoint(g_cq[ci]->GetN(), cd.cqa[ci], cd.cqb[ci]);
+	//		*/
+	//		p_cq[ci]->Fill(cd.cqa[ci], cd.cqb[ci]);
+	//		p_cq_time[ci]->Fill(ev.timestamp, cd.cv[ci]);
+	//	}
 
 		h_y_L_1_F_vs_x_L_1_F_noal_sel->Fill(ev.h.L_1_F.x, ev.h.L_1_F.y);
 		h_y_L_2_N_vs_x_L_2_N_noal_sel->Fill(ev.h.L_2_N.x, ev.h.L_2_N.y);
@@ -1189,16 +1191,16 @@ int main(int argc, char **argv)
 		h_th_y_R_vs_th_x_R->Fill(k.th_x_R, k.th_y_R);
 		h_th_y_vs_th_x->Fill(k.th_x, k.th_y);
 	
-		if (detailsLevel >= 1)
-		{
-			g_th_y_L_vs_th_x_L->SetPoint(g_th_y_L_vs_th_x_L->GetN(), k.th_x_L, k.th_y_L);
-			g_th_y_R_vs_th_x_R->SetPoint(g_th_y_R_vs_th_x_R->GetN(), k.th_x_R, k.th_y_R);
-			g_th_y_vs_th_x->SetPoint(g_th_y_vs_th_x->GetN(), k.th_x, k.th_y);
-		}
+	//	if (detailsLevel >= 1)
+	//	{
+	//		g_th_y_L_vs_th_x_L->SetPoint(g_th_y_L_vs_th_x_L->GetN(), k.th_x_L, k.th_y_L);
+	//		g_th_y_R_vs_th_x_R->SetPoint(g_th_y_R_vs_th_x_R->GetN(), k.th_x_R, k.th_y_R);
+	//		g_th_y_vs_th_x->SetPoint(g_th_y_vs_th_x->GetN(), k.th_x, k.th_y);
+	//	}
 	
 		h_th_y_L_vs_th_y_R->Fill(k.th_y_R, k.th_y_L);
-		if (detailsLevel > 2)
-			g_th_y_L_vs_th_y_R->SetPoint(g_th_y_L_vs_th_y_R->GetN(), k.th_y_R, k.th_y_L);
+	//	if (detailsLevel > 2)
+	//		g_th_y_L_vs_th_y_R->SetPoint(g_th_y_L_vs_th_y_R->GetN(), k.th_y_R, k.th_y_L);
 
 		h_th_x->Fill(k.th_x);
 		h_th_y->Fill(k.th_y);
@@ -1245,17 +1247,17 @@ int main(int argc, char **argv)
 		h_vtx_x_diffLR_vs_vtx_x_R->Fill(k.vtx_x_R, k.vtx_x_R - k.vtx_x_L);
 		h_vtx_y_diffLR_vs_vtx_y_R->Fill(k.vtx_y_R, k.vtx_y_R - k.vtx_y_L);
 
-		if (safe)
-		{
-			h_vtx_x_safe->Fill(k.vtx_x);
-			h_vtx_y_safe->Fill(k.vtx_y);
+	//	if (safe)
+	//	{
+	//		h_vtx_x_safe->Fill(k.vtx_x);
+	//		h_vtx_y_safe->Fill(k.vtx_y);
 
-			h_vtx_x_diffLR_safe->Fill(k.vtx_x_R - k.vtx_x_L);
-			h_vtx_y_diffLR_safe->Fill(k.vtx_y_R - k.vtx_y_L);
+	//		h_vtx_x_diffLR_safe->Fill(k.vtx_x_R - k.vtx_x_L);
+	//		h_vtx_y_diffLR_safe->Fill(k.vtx_y_R - k.vtx_y_L);
 
-			h_vtx_x_diffLR_safe_corr->Fill((k.vtx_x_R - k.vtx_x_L) - 1080.*k.th_x);
-			h_vtx_y_diffLR_safe_corr->Fill((k.vtx_y_R - k.vtx_y_L) + 156. *k.th_y);
-		}
+	//		h_vtx_x_diffLR_safe_corr->Fill((k.vtx_x_R - k.vtx_x_L) - 1080.*k.th_x);
+	//		h_vtx_y_diffLR_safe_corr->Fill((k.vtx_y_R - k.vtx_y_L) + 156. *k.th_y);
+	//	}
 		
 
 		/*
@@ -1355,36 +1357,36 @@ int main(int argc, char **argv)
 		h_ta_y_R_vs_th_y_R->Fill(k.th_y_R, ta_y_R);
 		*/
 
-		if (fabs(k.th_y) > safe_th_y_min && fabs(k.th_y) < safe_th_y_max)
-		{
-			p_diffLR_th_x_vs_time->Fill(ev.timestamp, k.th_x_R - k.th_x_L);
-			p_diffLR_th_y_vs_time->Fill(ev.timestamp, k.th_y_R - k.th_y_L);
-
-			p_diffNF_th_y_L_vs_time->Fill(ev.timestamp, k.th_y_L_F - k.th_y_L_N);
-			p_diffNF_th_y_R_vs_time->Fill(ev.timestamp, k.th_y_R_F - k.th_y_R_N);
-
-			p_vtx_x_vs_time->Fill(ev.timestamp, k.vtx_x);
-
-			if (detailsLevel >= 2)
-			{
-				tm_h_th_x_L[period]->Fill(k.th_x_L);
-				tm_h_th_x_R[period]->Fill(k.th_x_R);
-
-				tm_p_diffLR_th_x[period]->Fill(k.th_x, k.th_x_R - k.th_x_L);
-				tm_p_diffLR_th_y[period]->Fill(k.th_y, k.th_y_R - k.th_y_L);
-
-				/*
-				tm_p_x_L_F_vs_th_x_L[period]->Fill(k.th_x_L, h_al.x_L_F);
-				tm_p_x_R_F_vs_th_x_R[period]->Fill(k.th_x_R, h_al.x_R_F);
-				*/
-			}
-		}
-
-		p_th_x_R_vs_time->Fill(ev.timestamp, k.th_x_R);
-		p_th_y_R_vs_time->Fill(ev.timestamp, k.th_y_R);
-		p_th_x_L_vs_time->Fill(ev.timestamp, k.th_x_L);
-		p_th_y_L_vs_time->Fill(ev.timestamp, k.th_y_L);
-
+//		if (fabs(k.th_y) > safe_th_y_min && fabs(k.th_y) < safe_th_y_max)
+//		{
+//			p_diffLR_th_x_vs_time->Fill(ev.timestamp, k.th_x_R - k.th_x_L);
+//			p_diffLR_th_y_vs_time->Fill(ev.timestamp, k.th_y_R - k.th_y_L);
+//
+//			p_diffNF_th_y_L_vs_time->Fill(ev.timestamp, k.th_y_L_F - k.th_y_L_N);
+//			p_diffNF_th_y_R_vs_time->Fill(ev.timestamp, k.th_y_R_F - k.th_y_R_N);
+//
+//			p_vtx_x_vs_time->Fill(ev.timestamp, k.vtx_x);
+//
+//			if (detailsLevel >= 2)
+//			{
+//				tm_h_th_x_L[period]->Fill(k.th_x_L);
+//				tm_h_th_x_R[period]->Fill(k.th_x_R);
+//
+//				tm_p_diffLR_th_x[period]->Fill(k.th_x, k.th_x_R - k.th_x_L);
+//				tm_p_diffLR_th_y[period]->Fill(k.th_y, k.th_y_R - k.th_y_L);
+//
+//				/*
+//				tm_p_x_L_F_vs_th_x_L[period]->Fill(k.th_x_L, h_al.x_L_F);
+//				tm_p_x_R_F_vs_th_x_R[period]->Fill(k.th_x_R, h_al.x_R_F);
+//				*/
+//			}
+//		}
+//
+//		p_th_x_R_vs_time->Fill(ev.timestamp, k.th_x_R);
+//		p_th_y_R_vs_time->Fill(ev.timestamp, k.th_y_R);
+//		p_th_x_L_vs_time->Fill(ev.timestamp, k.th_x_L);
+//		p_th_y_L_vs_time->Fill(ev.timestamp, k.th_y_L);
+//
 		// set time-dependent resolutions
 		// TODO
 		/*
@@ -1395,8 +1397,8 @@ int main(int argc, char **argv)
 		}
 		*/
 
-		p_input_beam_div_x_vs_time->Fill(ev.timestamp, anal.si_th_x_1arm_L);
-		p_input_beam_div_y_vs_time->Fill(ev.timestamp, anal.si_th_y_1arm);
+//		p_input_beam_div_x_vs_time->Fill(ev.timestamp, anal.si_th_x_1arm_L);
+//		p_input_beam_div_y_vs_time->Fill(ev.timestamp, anal.si_th_y_1arm);
 
 		// calculate acceptance divergence correction
 		double phi_corr = 0., div_corr = 0.;
@@ -1435,20 +1437,20 @@ int main(int argc, char **argv)
 		h_th_y_vs_th_x_after->Fill(k.th_x, k.th_y, div_corr);
 		h_th_vs_phi_after->Fill(k.phi, k.th, div_corr);
 
-		if (detailsLevel >= 2)
-			g_weight_vs_th_y->SetPoint(g_weight_vs_th_y->GetN(), k.th_y, div_corr);
+//		if (detailsLevel >= 2)
+//			g_weight_vs_th_y->SetPoint(g_weight_vs_th_y->GetN(), k.th_y, div_corr);
 
 		// apply normalization
-		for (unsigned int bi = 0; bi < binnings.size(); bi++)
-			bh_t_normalized[bi]->Fill(k.t, corr * normalization);
+//		for (unsigned int bi = 0; bi < binnings.size(); bi++)
+//			bh_t_normalized[bi]->Fill(k.t, corr * normalization);
 		
 		h_th_y_vs_th_x_normalized->Fill(k.th_x, k.th_y, div_corr * normalization);
 
-		if (detailsLevel >= 1)
-		{
-			g_th_y_vs_th_x_acc->SetPoint(g_th_y_vs_th_x_acc->GetN(), k.th_x, k.th_y);
-			g_norm_corr_vs_div_corr->SetPoint(g_norm_corr_vs_div_corr->GetN(), div_corr, norm_corr);
-		}
+//		if (detailsLevel >= 1)
+//		{
+//			g_th_y_vs_th_x_acc->SetPoint(g_th_y_vs_th_x_acc->GetN(), k.th_x, k.th_y);
+//			g_norm_corr_vs_div_corr->SetPoint(g_norm_corr_vs_div_corr->GetN(), div_corr, norm_corr);
+//		}
 	}
 
 	for (auto &p : runTimestampBoundaries)
@@ -1474,15 +1476,15 @@ int main(int argc, char **argv)
 	printf("N_4outof4_T2trig = %u\n", N_4outof4_T2trig);
 
 	// derived plots
-	TGraphErrors *th_y_sigmaLR_vs_th_y = new TGraphErrors();
-	th_y_sigmaLR_vs_th_y->SetName("th_y_sigmaLR_vs_th_y");
-	th_y_sigmaLR_vs_th_y->SetTitle(";#theta_{y};RMS of #Delta^{R-L} #theta_{y}");
-	ProfileToRMSGraph(p_th_y_diffLR_vs_th_y, th_y_sigmaLR_vs_th_y);
-
-	TGraphErrors *th_x_sigmaLR_vs_th_x = new TGraphErrors();
-	th_x_sigmaLR_vs_th_x->SetName("th_x_sigmaLR_vs_th_x");
-	th_x_sigmaLR_vs_th_x->SetTitle(";#theta_{x};RMS of #Delta^{R-L} #theta_{x}");
-	ProfileToRMSGraph(p_th_x_diffLR_vs_th_x, th_x_sigmaLR_vs_th_x);
+//	TGraphErrors *th_y_sigmaLR_vs_th_y = new TGraphErrors();
+//	th_y_sigmaLR_vs_th_y->SetName("th_y_sigmaLR_vs_th_y");
+//	th_y_sigmaLR_vs_th_y->SetTitle(";#theta_{y};RMS of #Delta^{R-L} #theta_{y}");
+//	ProfileToRMSGraph(p_th_y_diffLR_vs_th_y, th_y_sigmaLR_vs_th_y);
+//
+//	TGraphErrors *th_x_sigmaLR_vs_th_x = new TGraphErrors();
+//	th_x_sigmaLR_vs_th_x->SetName("th_x_sigmaLR_vs_th_x");
+//	th_x_sigmaLR_vs_th_x->SetTitle(";#theta_{x};RMS of #Delta^{R-L} #theta_{x}");
+//	ProfileToRMSGraph(p_th_x_diffLR_vs_th_x, th_x_sigmaLR_vs_th_x);
 
 	// normalize histograms
 	for (unsigned int bi = 0; bi < binnings.size(); bi++)
@@ -1494,7 +1496,7 @@ int main(int argc, char **argv)
 		bh_t_normalized[bi]->Scale(1., "width");
 	}
 	
-	h_th_y_vs_th_x_normalized->Scale(1., "width");
+	//h_th_y_vs_th_x_normalized->Scale(1., "width");
 	
 	/*
 	hb_th_x_L->Scale(1., "width");
@@ -1505,29 +1507,29 @@ int main(int argc, char **argv)
 	
 	th_y_diffLR->Scale(1., "width");
 	th_x_diffLR->Scale(1., "width");
-	th_y_diffLR_safe->Scale(1., "width");
-	th_x_diffLR_safe->Scale(1., "width");
+	//th_y_diffLR_safe->Scale(1., "width");
+	//th_x_diffLR_safe->Scale(1., "width");
 
 	// hide bins with high uncertainty
-	for (unsigned int bi = 0; bi < binnings.size(); bi++)
-		HideLowTBins(bh_t_normalized[bi], anal.t_min_fit);
+	//for (unsigned int bi = 0; bi < binnings.size(); bi++)
+	//	HideLowTBins(bh_t_normalized[bi], anal.t_min_fit);
 
 	// fit histograms
 	//double th_y_low_bound = (diagonal == d45b_56t) ? (anal.th_y_lcut_L+anal.th_y_lcut_R)/2. + 5E-6 : -((anal.th_y_hcut_L+anal.th_y_hcut_R)/2. - 5E-6);
 	//double th_y_high_bound = (diagonal == d45b_56t) ? (anal.th_y_hcut_L+anal.th_y_hcut_R)/2. - 5E-6 : -((anal.th_y_lcut_L+anal.th_y_lcut_R)/2. + 5E-6);
-	double th_y_low_bound = (diagonal == d45b_56t) ? 220E-6 : -400E-6;
-	double th_y_high_bound = (diagonal == d45b_56t) ? 400E-6 : -220E-6;
+	//double th_y_low_bound = (diagonal == d45b_56t) ? 220E-6 : -400E-6;
+	//double th_y_high_bound = (diagonal == d45b_56t) ? 400E-6 : -220E-6;
 
-	printf("\n* th_y fit bounds: from %E to %E\n", th_y_low_bound, th_y_high_bound);
+	//printf("\n* th_y fit bounds: from %E to %E\n", th_y_low_bound, th_y_high_bound);
 
-	printf("\n* fitting p_th_x_diffLR_vs_th_x\n");
-	p_th_x_diffLR_vs_th_x->Fit("pol1", "", "", -250E-6, +250E-6);
-	printf("\n* fitting p_th_y_diffLR_vs_th_y\n");
-	p_th_y_diffLR_vs_th_y->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
-	printf("\n* fitting p_th_y_L_diffNF_vs_th_y_L\n");
-	p_th_y_L_diffNF_vs_th_y_L->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
-	printf("\n* fitting p_th_y_R_diffNF_vs_th_y_R\n");
-	p_th_y_R_diffNF_vs_th_y_R->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
+	//printf("\n* fitting p_th_x_diffLR_vs_th_x\n");
+	//p_th_x_diffLR_vs_th_x->Fit("pol1", "", "", -250E-6, +250E-6);
+	//printf("\n* fitting p_th_y_diffLR_vs_th_y\n");
+	//p_th_y_diffLR_vs_th_y->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
+	//printf("\n* fitting p_th_y_L_diffNF_vs_th_y_L\n");
+	//p_th_y_L_diffNF_vs_th_y_L->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
+	//printf("\n* fitting p_th_y_R_diffNF_vs_th_y_R\n");
+	//p_th_y_R_diffNF_vs_th_y_R->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
 	
 	/*
 	printf("\n* fitting p_x_L_F_vs_th_x\n");
@@ -1558,53 +1560,53 @@ int main(int argc, char **argv)
 	p_vtx_x_R_vs_th_x->Fit("pol1", "", "", -120E-6, +120E-6);
 	*/
 	
-	printf("* fitting p_vtx_x_diffLR_vs_th_x\n");
-	p_vtx_x_diffLR_vs_th_x->Fit("pol1", "", "", -120E-6, +120E-6);
+	//printf("* fitting p_vtx_x_diffLR_vs_th_x\n");
+	//p_vtx_x_diffLR_vs_th_x->Fit("pol1", "", "", -120E-6, +120E-6);
 
-	printf("* fitting p_th_x_vs_th_y\n");
-	p_th_x_vs_th_y->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
-	printf("* fitting p_th_x_L_vs_th_y_L\n");
-	p_th_x_L_vs_th_y_L->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
-	printf("* fitting p_th_x_R_vs_th_y_R\n");
-	p_th_x_R_vs_th_y_R->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
+	//printf("* fitting p_th_x_vs_th_y\n");
+	//p_th_x_vs_th_y->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
+	//printf("* fitting p_th_x_L_vs_th_y_L\n");
+	//p_th_x_L_vs_th_y_L->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
+	//printf("* fitting p_th_x_R_vs_th_y_R\n");
+	//p_th_x_R_vs_th_y_R->Fit("pol1", "", "", th_y_low_bound, th_y_high_bound);
 
-	printf("* fitting h_th_x_R\n");
-	h_th_x_R->Fit("gaus", "", "", -50E-6, +50E-6);
-	printf("* fitting h_th_x_L\n");
-	h_th_x_L->Fit("gaus", "", "", -50E-6, +50E-6);
+	//printf("* fitting h_th_x_R\n");
+	//h_th_x_R->Fit("gaus", "", "", -50E-6, +50E-6);
+	//printf("* fitting h_th_x_L\n");
+	//h_th_x_L->Fit("gaus", "", "", -50E-6, +50E-6);
 
-	printf("* fitting p_x_L_N_vs_th_x_L\n");
-	p_x_L_N_vs_th_x_L->Fit("pol1");
-	printf("* fitting p_x_L_F_vs_th_x_L\n");
-	p_x_L_F_vs_th_x_L->Fit("pol1");
-	printf("* fitting p_x_R_N_vs_th_x_R\n");
-	p_x_R_N_vs_th_x_R->Fit("pol1");
-	printf("* fitting p_x_R_F_vs_th_x_R\n");
-	p_x_R_F_vs_th_x_R->Fit("pol1");
+	//printf("* fitting p_x_L_N_vs_th_x_L\n");
+	//p_x_L_N_vs_th_x_L->Fit("pol1");
+	//printf("* fitting p_x_L_F_vs_th_x_L\n");
+	//p_x_L_F_vs_th_x_L->Fit("pol1");
+	//printf("* fitting p_x_R_N_vs_th_x_R\n");
+	//p_x_R_N_vs_th_x_R->Fit("pol1");
+	//printf("* fitting p_x_R_F_vs_th_x_R\n");
+	//p_x_R_F_vs_th_x_R->Fit("pol1");
 
 
-	printf("* fitting p_th_x_R_vs_th_x_L\n");
-	p_th_x_R_vs_th_x_L->Fit("pol1");
-	printf("* fitting p_th_y_R_vs_th_y_L\n");
-	p_th_y_R_vs_th_y_L->Fit("pol1", "", "", 220E-6, 500E-6);
-	printf("* fitting p_th_y_LF_vs_th_y_LN\n");
-	p_th_y_LF_vs_th_y_LN->Fit("pol1", "", "", 170E-6, 500E-6);
-	printf("* fitting p_th_y_RF_vs_th_y_RN\n");
-	p_th_y_RF_vs_th_y_RN->Fit("pol1", "", "", 170E-6, 500E-6);
+	//printf("* fitting p_th_x_R_vs_th_x_L\n");
+	//p_th_x_R_vs_th_x_L->Fit("pol1");
+	//printf("* fitting p_th_y_R_vs_th_y_L\n");
+	//p_th_y_R_vs_th_y_L->Fit("pol1", "", "", 220E-6, 500E-6);
+	//printf("* fitting p_th_y_LF_vs_th_y_LN\n");
+	//p_th_y_LF_vs_th_y_LN->Fit("pol1", "", "", 170E-6, 500E-6);
+	//printf("* fitting p_th_y_RF_vs_th_y_RN\n");
+	//p_th_y_RF_vs_th_y_RN->Fit("pol1", "", "", 170E-6, 500E-6);
 
-	printf("* fitting p_diffLR_th_x_vs_time\n");
-	p_diffLR_th_x_vs_time->Fit("pol1");
-	printf("* fitting p_diffLR_th_y_vs_time\n");
-	p_diffLR_th_y_vs_time->Fit("pol1");
+	//printf("* fitting p_diffLR_th_x_vs_time\n");
+	//p_diffLR_th_x_vs_time->Fit("pol1");
+	//printf("* fitting p_diffLR_th_y_vs_time\n");
+	//p_diffLR_th_y_vs_time->Fit("pol1");
 
-	printf("* fitting p_th_x_R_vs_time\n");
-	p_th_x_R_vs_time->Fit("pol1");
-	printf("* fitting p_th_y_R_vs_time\n");
-	p_th_y_R_vs_time->Fit("pol1");
-	printf("* fitting p_th_x_L_vs_time\n");
-	p_th_x_L_vs_time->Fit("pol1");
-	printf("* fitting p_th_y_L_vs_time\n");
-	p_th_y_L_vs_time->Fit("pol1");
+	//printf("* fitting p_th_x_R_vs_time\n");
+	//p_th_x_R_vs_time->Fit("pol1");
+	//printf("* fitting p_th_y_R_vs_time\n");
+	//p_th_y_R_vs_time->Fit("pol1");
+	//printf("* fitting p_th_x_L_vs_time\n");
+	//p_th_x_L_vs_time->Fit("pol1");
+	//printf("* fitting p_th_y_L_vs_time\n");
+	//p_th_y_L_vs_time->Fit("pol1");
 
 	// double-gauss fit for background histograms
 	/*
@@ -1638,39 +1640,39 @@ int main(int argc, char **argv)
 	p_x_vs_y_R_F->Fit("pol1", "", "", -15., +15.);
 	*/
 	
-	th_y_diffLR_safe->Fit("gaus");
-	th_x_diffLR_safe->Fit("gaus");
+	//th_y_diffLR_safe->Fit("gaus");
+	//th_x_diffLR_safe->Fit("gaus");
 	
 	// apply unfolding correction
-	map<unsigned int, TH1D *>  bh_t_normalized_unsmeared;
-	for (unsigned int bi = 0; bi < binnings.size(); bi++)
-	{
-		bh_t_normalized_unsmeared[bi] = new TH1D(* bh_t_normalized[bi]);
-		bh_t_normalized_unsmeared[bi]->SetName("h_t_normalized_unsmeared");
-
-		for (int bin = 1; bin <= bh_t_normalized_unsmeared[bi]->GetNbinsX(); ++bin)
-		{
-			double c = bh_t_normalized_unsmeared[bi]->GetBinCenter(bin);
-			double v = bh_t_normalized_unsmeared[bi]->GetBinContent(bin);
-			double v_u = bh_t_normalized_unsmeared[bi]->GetBinError(bin);
-
-			double corr = (unsmearing_correction_fit == NULL) ? 0. : unsmearing_correction_fit->Eval(c);
-
-			bh_t_normalized_unsmeared[bi]->SetBinContent(bin, v * corr);
-			bh_t_normalized_unsmeared[bi]->SetBinError(bin, v_u * corr);
-		}
-	}
+//	map<unsigned int, TH1D *>  bh_t_normalized_unsmeared;
+//	for (unsigned int bi = 0; bi < binnings.size(); bi++)
+//	{
+//		bh_t_normalized_unsmeared[bi] = new TH1D(* bh_t_normalized[bi]);
+//		bh_t_normalized_unsmeared[bi]->SetName("h_t_normalized_unsmeared");
+//
+//		for (int bin = 1; bin <= bh_t_normalized_unsmeared[bi]->GetNbinsX(); ++bin)
+//		{
+//			double c = bh_t_normalized_unsmeared[bi]->GetBinCenter(bin);
+//			double v = bh_t_normalized_unsmeared[bi]->GetBinContent(bin);
+//			double v_u = bh_t_normalized_unsmeared[bi]->GetBinError(bin);
+//
+//			double corr = (unsmearing_correction_fit == NULL) ? 0. : unsmearing_correction_fit->Eval(c);
+//
+//			bh_t_normalized_unsmeared[bi]->SetBinContent(bin, v * corr);
+//			bh_t_normalized_unsmeared[bi]->SetBinError(bin, v_u * corr);
+//		}
+//	}
 
 	// derived plots
-	map<unsigned int, TGraphErrors *> bh_t_normalized_rel_diff, bh_t_normalized_unsmeared_rel_diff;
-	for (unsigned int bi = 0; bi < binnings.size(); bi++)
-	{
-		bh_t_normalized_rel_diff[bi] = MakeRelDiff(bh_t_normalized[bi]);
-		bh_t_normalized_rel_diff[bi]->SetName("h_t_eb_normalized_rel_diff");
-	
-		bh_t_normalized_unsmeared_rel_diff[bi] = MakeRelDiff(bh_t_normalized_unsmeared[bi]);
-		bh_t_normalized_unsmeared_rel_diff[bi]->SetName("h_t_eb_normalized_unsmeared_rel_diff");
-	}
+//	map<unsigned int, TGraphErrors *> bh_t_normalized_rel_diff, bh_t_normalized_unsmeared_rel_diff;
+//	for (unsigned int bi = 0; bi < binnings.size(); bi++)
+//	{
+//		bh_t_normalized_rel_diff[bi] = MakeRelDiff(bh_t_normalized[bi]);
+//		bh_t_normalized_rel_diff[bi]->SetName("h_t_eb_normalized_rel_diff");
+//	
+//		bh_t_normalized_unsmeared_rel_diff[bi] = MakeRelDiff(bh_t_normalized_unsmeared[bi]);
+//		bh_t_normalized_unsmeared_rel_diff[bi]->SetName("h_t_eb_normalized_unsmeared_rel_diff");
+//	}
 
 	// save histograms
 	TCanvas *c;
@@ -1685,17 +1687,17 @@ int main(int argc, char **argv)
 	h_timestamp_sel->Draw("sames");
 	c->Write();
 
-	if (detailsLevel >= 2)
-	{	
-		//g_timestamp_vs_ev_idx_dgn->Write();
-		g_timestamp_vs_ev_idx_sel->Write();
-
-		g_run_vs_timestamp->Write();
-		//g_ev_num_vs_timestamp->Write();
-		//g_tr_num_vs_timestamp->Write();
-		g_bunch_num_vs_timestamp->Write();
-		g_selected_bunch_num_vs_timestamp->Write();
-	}
+//	if (detailsLevel >= 2)
+//	{	
+//		//g_timestamp_vs_ev_idx_dgn->Write();
+//		g_timestamp_vs_ev_idx_sel->Write();
+//
+//		g_run_vs_timestamp->Write();
+//		//g_ev_num_vs_timestamp->Write();
+//		//g_tr_num_vs_timestamp->Write();
+//		g_bunch_num_vs_timestamp->Write();
+//		g_selected_bunch_num_vs_timestamp->Write();
+//	}
 	
 	TDirectory *hitDistDir = outF->mkdir("hit distributions");
 	gDirectory = hitDistDir->mkdir("vertical, aligned, before selection");
@@ -1731,155 +1733,155 @@ int main(int argc, char **argv)
 	g_y_R_2_F_vs_x_R_2_F_al_sel->Write();
 	*/
 
-	TDirectory *alDir = outF->mkdir("alignment");
-
-	TF1 *ff = new TF1("ff", "[0] + [1]*x");
-
-	TGraphErrors* g_ext_diffLR_th_x_vs_time = new TGraphErrors(); g_ext_diffLR_th_x_vs_time->SetName("g_ext_diffLR_th_x_vs_time");
-	TGraphErrors* g_ext_diffLR_th_y_vs_time = new TGraphErrors(); g_ext_diffLR_th_y_vs_time->SetName("g_ext_diffLR_th_y_vs_time");
-
-	TGraphErrors* g_L_L_F_vs_time = new TGraphErrors(); g_L_L_F_vs_time->SetName("g_L_L_F_vs_time");
-	TGraphErrors* g_L_R_F_vs_time = new TGraphErrors(); g_L_R_F_vs_time->SetName("g_L_R_F_vs_time");
-
-	for (map<signed int, TGraph *>::iterator pid = g_w_vs_timestamp_sel.begin(); pid != g_w_vs_timestamp_sel.end(); ++pid)
-	{
-		signed int period = pid->first;
-
-		char buf[100];
-		sprintf(buf, "%i", period);
-		gDirectory = alDir->mkdir(buf);
-		
-		g_w_vs_timestamp_sel[period]->SetName("g_w_vs_timestamp_sel"); g_w_vs_timestamp_sel[period]->Write();
-
-		g_y_L_1_F_vs_x_L_1_F_sel[period]->SetName("g_y_L_1_F_vs_x_L_1_F_sel"); g_y_L_1_F_vs_x_L_1_F_sel[period]->Write();
-		g_y_L_2_N_vs_x_L_2_N_sel[period]->SetName("g_y_L_2_N_vs_x_L_2_N_sel"); g_y_L_2_N_vs_x_L_2_N_sel[period]->Write();
-		g_y_L_2_F_vs_x_L_2_F_sel[period]->SetName("g_y_L_2_F_vs_x_L_2_F_sel"); g_y_L_2_F_vs_x_L_2_F_sel[period]->Write();
-
-		g_y_R_1_F_vs_x_R_1_F_sel[period]->SetName("g_y_R_1_F_vs_x_R_1_F_sel"); g_y_R_1_F_vs_x_R_1_F_sel[period]->Write();
-		g_y_R_2_N_vs_x_R_2_N_sel[period]->SetName("g_y_R_2_N_vs_x_R_2_N_sel"); g_y_R_2_N_vs_x_R_2_N_sel[period]->Write();
-		g_y_R_2_F_vs_x_R_2_F_sel[period]->SetName("g_y_R_2_F_vs_x_R_2_F_sel"); g_y_R_2_F_vs_x_R_2_F_sel[period]->Write();
-
-		tm_h_th_x_L[period]->Write("tm_h_th_x_L");
-		tm_h_th_x_R[period]->Write("tm_h_th_x_R");
-
-		TProfile *p_th_x = tm_p_diffLR_th_x[period];
-		p_th_x->SetName("p_diffLR_th_x");
-		unsigned int reasonableBins_x = SuppressLowStatisticsBins(p_th_x, 5);
-		p_th_x->Fit(ff, "Q");
-		p_th_x->Write();
-		double v_x = ff->GetParameter(0), u_x = ff->GetParError(0);
-
-		TProfile *p_th_y = tm_p_diffLR_th_y[period];
-		p_th_y->SetName("p_diffLR_th_y");
-		unsigned int reasonableBins_y = SuppressLowStatisticsBins(p_th_y, 5);
-		p_th_y->Fit(ff, "Q");
-		p_th_y->Write();
-		double v_y = ff->GetParameter(0), u_y = ff->GetParError(0);
-
-		double time = anal.alignment_t0 + (period + 0.5) * anal.alignment_ts;
-		double time_beg = anal.alignment_t0 + (period + 0.0) * anal.alignment_ts;
-		double time_end = anal.alignment_t0 + (period + 1.0) * anal.alignment_ts;
-		printf("period %u: from %.0f to %0.f\n", period, time_beg, time_end);
-		
-		if (reasonableBins_x > 9)
-		{
-			int idx = g_ext_diffLR_th_x_vs_time->GetN();
-			g_ext_diffLR_th_x_vs_time->SetPoint(idx, time, v_x);
-			g_ext_diffLR_th_x_vs_time->SetPointError(idx, 0., u_x);
-		}
-		
-		if (reasonableBins_y > 9)
-		{
-			int idx = g_ext_diffLR_th_y_vs_time->GetN();
-			g_ext_diffLR_th_y_vs_time->SetPoint(idx, time, v_y);
-			g_ext_diffLR_th_y_vs_time->SetPointError(idx, 0., u_y);
-		}
-
-
-		TProfile *p_L_L = tm_p_x_L_F_vs_th_x_L[period];
-		p_L_L->SetName("p_x_L_F_vs_th_x_L");
-		unsigned int reasonableBins_L_L = SuppressLowStatisticsBins(p_L_L, 5);
-		p_L_L->Fit(ff, "Q");
-		p_L_L->Write();
-		double L_L = ff->GetParameter(1), u_L_L = ff->GetParError(1);
-
-		if (reasonableBins_L_L > 9)
-		{
-			int idx = g_L_L_F_vs_time->GetN();
-			g_L_L_F_vs_time->SetPoint(idx, time, -L_L);
-			g_L_L_F_vs_time->SetPointError(idx, 0., u_L_L);
-		}
-
-		TProfile *p_L_R = tm_p_x_R_F_vs_th_x_R[period];
-		p_L_R->SetName("p_x_R_F_vs_th_x_R");
-		unsigned int reasonableBins_L_R = SuppressLowStatisticsBins(p_L_R, 5);
-		p_L_R->Fit(ff, "Q");
-		p_L_R->Write();
-		double L_R = ff->GetParameter(1), u_L_R = ff->GetParError(1);
-
-		if (reasonableBins_L_R > 9)
-		{
-			int idx = g_L_R_F_vs_time->GetN();
-			g_L_R_F_vs_time->SetPoint(idx, time, +L_R);
-			g_L_R_F_vs_time->SetPointError(idx, 0., u_L_R);
-		}
-	}
-
-	TDirectory *cutDir = outF->mkdir("elastic cuts");
-	for (unsigned int ci = 1; ci <= anal.N_cuts; ++ci)
-	{
-		char buf[100];
-		sprintf(buf, "cut %u", ci);
-		gDirectory = cutDir->mkdir(buf);
-
-		printf("* RMS of cut distribution %u\n", ci);
-		printf("%E\n", h_cq[ci]->GetRMS());
-
-		printf("* fitting cut distribution %u\n", ci);
-		h_cq[ci]->Fit("gaus", "", "", -3., +3.);
-
-		h_cq[ci]->Write();
-		h2_cq[ci]->Write();
-		h2_cq_full[ci]->Write();
-		//g_cq[ci]->Write();
-
-		p_cq[ci]->Write();
-
-		p_cq_time[ci]->Write();
-
-		TGraphErrors *g_cq_time = new TGraphErrors();
-		sprintf(buf, "g_cq_RMS%u", ci); g_cq_time->SetName(buf);
-		sprintf(buf, ";time   (s);RMS of cq%u", ci); g_cq_time->SetTitle(buf);
-		ProfileToRMSGraph(p_cq_time[ci], g_cq_time);
-		g_cq_time->Write();
-
-		h2_cq_full[ci]->Draw();
-
-		sprintf(buf, "plot_before_cq%u", ci);
-		c = new TCanvas(buf);
-		c->SetLogz(1);
-		h2_cq_full[ci]->Draw("colz");
-
-		double lim = h2_cq_full[ci]->GetXaxis()->GetXmax();
-		double qa[2] = {-lim, +lim};
-		double qbp[2]= {(+anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[0] - anal.ccc[ci])/anal.ccb[ci],
-			(+anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[1] - anal.ccc[ci])/anal.ccb[ci]};
-		double qbm[2]= {(-anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[0] - anal.ccc[ci])/anal.ccb[ci],
-			(-anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[1] - anal.ccc[ci])/anal.ccb[ci]};
-		TGraph *gP = new TGraph(2, qa, qbp); gP->Draw("l");
-		TGraph *gM = new TGraph(2, qa, qbm); gM->Draw("l");
-		c->Write();
-		
-		sprintf(buf, "plot_after_cq%u", ci);
-		c = new TCanvas(buf);
-		c->SetLogz(1);
-		h2_cq[ci]->Draw("colz");
-		gP = new TGraph(2, qa, qbp); gP->Draw("l");
-		gM = new TGraph(2, qa, qbm); gM->Draw("l");
-		gP->Draw("l");
-		gM->Draw("l");
-		c->Write();
-	}
+//	TDirectory *alDir = outF->mkdir("alignment");
+//
+//	TF1 *ff = new TF1("ff", "[0] + [1]*x");
+//
+//	TGraphErrors* g_ext_diffLR_th_x_vs_time = new TGraphErrors(); g_ext_diffLR_th_x_vs_time->SetName("g_ext_diffLR_th_x_vs_time");
+//	TGraphErrors* g_ext_diffLR_th_y_vs_time = new TGraphErrors(); g_ext_diffLR_th_y_vs_time->SetName("g_ext_diffLR_th_y_vs_time");
+//
+//	TGraphErrors* g_L_L_F_vs_time = new TGraphErrors(); g_L_L_F_vs_time->SetName("g_L_L_F_vs_time");
+//	TGraphErrors* g_L_R_F_vs_time = new TGraphErrors(); g_L_R_F_vs_time->SetName("g_L_R_F_vs_time");
+//
+//	for (map<signed int, TGraph *>::iterator pid = g_w_vs_timestamp_sel.begin(); pid != g_w_vs_timestamp_sel.end(); ++pid)
+//	{
+//		signed int period = pid->first;
+//
+//		char buf[100];
+//		sprintf(buf, "%i", period);
+//		gDirectory = alDir->mkdir(buf);
+//		
+//		g_w_vs_timestamp_sel[period]->SetName("g_w_vs_timestamp_sel"); g_w_vs_timestamp_sel[period]->Write();
+//
+//		g_y_L_1_F_vs_x_L_1_F_sel[period]->SetName("g_y_L_1_F_vs_x_L_1_F_sel"); g_y_L_1_F_vs_x_L_1_F_sel[period]->Write();
+//		g_y_L_2_N_vs_x_L_2_N_sel[period]->SetName("g_y_L_2_N_vs_x_L_2_N_sel"); g_y_L_2_N_vs_x_L_2_N_sel[period]->Write();
+//		g_y_L_2_F_vs_x_L_2_F_sel[period]->SetName("g_y_L_2_F_vs_x_L_2_F_sel"); g_y_L_2_F_vs_x_L_2_F_sel[period]->Write();
+//
+//		g_y_R_1_F_vs_x_R_1_F_sel[period]->SetName("g_y_R_1_F_vs_x_R_1_F_sel"); g_y_R_1_F_vs_x_R_1_F_sel[period]->Write();
+//		g_y_R_2_N_vs_x_R_2_N_sel[period]->SetName("g_y_R_2_N_vs_x_R_2_N_sel"); g_y_R_2_N_vs_x_R_2_N_sel[period]->Write();
+//		g_y_R_2_F_vs_x_R_2_F_sel[period]->SetName("g_y_R_2_F_vs_x_R_2_F_sel"); g_y_R_2_F_vs_x_R_2_F_sel[period]->Write();
+//
+//		tm_h_th_x_L[period]->Write("tm_h_th_x_L");
+//		tm_h_th_x_R[period]->Write("tm_h_th_x_R");
+//
+//		TProfile *p_th_x = tm_p_diffLR_th_x[period];
+//		p_th_x->SetName("p_diffLR_th_x");
+//		unsigned int reasonableBins_x = SuppressLowStatisticsBins(p_th_x, 5);
+//		p_th_x->Fit(ff, "Q");
+//		p_th_x->Write();
+//		double v_x = ff->GetParameter(0), u_x = ff->GetParError(0);
+//
+//		TProfile *p_th_y = tm_p_diffLR_th_y[period];
+//		p_th_y->SetName("p_diffLR_th_y");
+//		unsigned int reasonableBins_y = SuppressLowStatisticsBins(p_th_y, 5);
+//		p_th_y->Fit(ff, "Q");
+//		p_th_y->Write();
+//		double v_y = ff->GetParameter(0), u_y = ff->GetParError(0);
+//
+//		double time = anal.alignment_t0 + (period + 0.5) * anal.alignment_ts;
+//		double time_beg = anal.alignment_t0 + (period + 0.0) * anal.alignment_ts;
+//		double time_end = anal.alignment_t0 + (period + 1.0) * anal.alignment_ts;
+//		printf("period %u: from %.0f to %0.f\n", period, time_beg, time_end);
+//		
+//		if (reasonableBins_x > 9)
+//		{
+//			int idx = g_ext_diffLR_th_x_vs_time->GetN();
+//			g_ext_diffLR_th_x_vs_time->SetPoint(idx, time, v_x);
+//			g_ext_diffLR_th_x_vs_time->SetPointError(idx, 0., u_x);
+//		}
+//		
+//		if (reasonableBins_y > 9)
+//		{
+//			int idx = g_ext_diffLR_th_y_vs_time->GetN();
+//			g_ext_diffLR_th_y_vs_time->SetPoint(idx, time, v_y);
+//			g_ext_diffLR_th_y_vs_time->SetPointError(idx, 0., u_y);
+//		}
+//
+//
+//		TProfile *p_L_L = tm_p_x_L_F_vs_th_x_L[period];
+//		p_L_L->SetName("p_x_L_F_vs_th_x_L");
+//		unsigned int reasonableBins_L_L = SuppressLowStatisticsBins(p_L_L, 5);
+//		p_L_L->Fit(ff, "Q");
+//		p_L_L->Write();
+//		double L_L = ff->GetParameter(1), u_L_L = ff->GetParError(1);
+//
+//		if (reasonableBins_L_L > 9)
+//		{
+//			int idx = g_L_L_F_vs_time->GetN();
+//			g_L_L_F_vs_time->SetPoint(idx, time, -L_L);
+//			g_L_L_F_vs_time->SetPointError(idx, 0., u_L_L);
+//		}
+//
+//		TProfile *p_L_R = tm_p_x_R_F_vs_th_x_R[period];
+//		p_L_R->SetName("p_x_R_F_vs_th_x_R");
+//		unsigned int reasonableBins_L_R = SuppressLowStatisticsBins(p_L_R, 5);
+//		p_L_R->Fit(ff, "Q");
+//		p_L_R->Write();
+//		double L_R = ff->GetParameter(1), u_L_R = ff->GetParError(1);
+//
+//		if (reasonableBins_L_R > 9)
+//		{
+//			int idx = g_L_R_F_vs_time->GetN();
+//			g_L_R_F_vs_time->SetPoint(idx, time, +L_R);
+//			g_L_R_F_vs_time->SetPointError(idx, 0., u_L_R);
+//		}
+//	}
+//
+//	TDirectory *cutDir = outF->mkdir("elastic cuts");
+//	for (unsigned int ci = 1; ci <= anal.N_cuts; ++ci)
+//	{
+//		char buf[100];
+//		sprintf(buf, "cut %u", ci);
+//		gDirectory = cutDir->mkdir(buf);
+//
+//		printf("* RMS of cut distribution %u\n", ci);
+//		printf("%E\n", h_cq[ci]->GetRMS());
+//
+//		printf("* fitting cut distribution %u\n", ci);
+//		h_cq[ci]->Fit("gaus", "", "", -3., +3.);
+//
+//		h_cq[ci]->Write();
+//		h2_cq[ci]->Write();
+//		h2_cq_full[ci]->Write();
+//		//g_cq[ci]->Write();
+//
+//		p_cq[ci]->Write();
+//
+//		p_cq_time[ci]->Write();
+//
+//		TGraphErrors *g_cq_time = new TGraphErrors();
+//		sprintf(buf, "g_cq_RMS%u", ci); g_cq_time->SetName(buf);
+//		sprintf(buf, ";time   (s);RMS of cq%u", ci); g_cq_time->SetTitle(buf);
+//		ProfileToRMSGraph(p_cq_time[ci], g_cq_time);
+//		g_cq_time->Write();
+//
+//		h2_cq_full[ci]->Draw();
+//
+//		sprintf(buf, "plot_before_cq%u", ci);
+//		c = new TCanvas(buf);
+//		c->SetLogz(1);
+//		h2_cq_full[ci]->Draw("colz");
+//
+//		double lim = h2_cq_full[ci]->GetXaxis()->GetXmax();
+//		double qa[2] = {-lim, +lim};
+//		double qbp[2]= {(+anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[0] - anal.ccc[ci])/anal.ccb[ci],
+//			(+anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[1] - anal.ccc[ci])/anal.ccb[ci]};
+//		double qbm[2]= {(-anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[0] - anal.ccc[ci])/anal.ccb[ci],
+//			(-anal.n_si*anal.csi[ci] - anal.cca[ci]*qa[1] - anal.ccc[ci])/anal.ccb[ci]};
+//		TGraph *gP = new TGraph(2, qa, qbp); gP->Draw("l");
+//		TGraph *gM = new TGraph(2, qa, qbm); gM->Draw("l");
+//		c->Write();
+//		
+//		sprintf(buf, "plot_after_cq%u", ci);
+//		c = new TCanvas(buf);
+//		c->SetLogz(1);
+//		h2_cq[ci]->Draw("colz");
+//		gP = new TGraph(2, qa, qbp); gP->Draw("l");
+//		gM = new TGraph(2, qa, qbm); gM->Draw("l");
+//		gP->Draw("l");
+//		gM->Draw("l");
+//		c->Write();
+//	}
 
 	gDirectory = outF->mkdir("selected - hits");
 	/*
@@ -1911,30 +1913,30 @@ int main(int argc, char **argv)
 	h_th_y_diffLR_vs_th_y->Write();
 	h_th_x_diffLR_vs_vtx_x->Write();
 
-	p_th_x_diffLR_vs_th_x->Write();
-	p_th_y_diffLR_vs_th_y->Write();
-	p_th_y_L_diffNF_vs_th_y_L->Write();
-	p_th_y_R_diffNF_vs_th_y_R->Write();
-
-	p_th_x_diffLR_vs_vtx_x->Write();
+//	p_th_x_diffLR_vs_th_x->Write();
+//	p_th_y_diffLR_vs_th_y->Write();
+//	p_th_y_L_diffNF_vs_th_y_L->Write();
+//	p_th_y_R_diffNF_vs_th_y_R->Write();
+//
+//	p_th_x_diffLR_vs_vtx_x->Write();
 
 	th_x_sigmaLR_vs_th_x->Write();
 	th_y_sigmaLR_vs_th_y->Write();
 	
-	th_x_diffLR_safe->Write();
-	th_y_diffLR_safe->Write();
+//	th_x_diffLR_safe->Write();
+//	th_y_diffLR_safe->Write();
 
-	p_th_x_vs_th_y->Write();
-	p_th_x_L_vs_th_y_L->Write();
-	p_th_x_R_vs_th_y_R->Write();
+//	p_th_x_vs_th_y->Write();
+//	p_th_x_L_vs_th_y_L->Write();
+//	p_th_x_R_vs_th_y_R->Write();
 
 	h_th_y_L_vs_th_x_L->Write();
 	h_th_y_R_vs_th_x_R->Write();
 	h_th_y_vs_th_x->Write();
 
-	g_th_y_L_vs_th_x_L->Write();
-	g_th_y_R_vs_th_x_R->Write();
-	g_th_y_vs_th_x->Write();
+//	g_th_y_L_vs_th_x_L->Write();
+//	g_th_y_R_vs_th_x_R->Write();
+//	g_th_y_vs_th_x->Write();
 	
 	{
 		c = new TCanvas();
@@ -1942,7 +1944,7 @@ int main(int argc, char **argv)
 		c->ToggleEventStatus();
 		c->SetCrosshair(1);
 		h_th_y_L_vs_th_y_R->Draw("colz");
-		g_th_y_L_vs_th_y_R->Draw("p");
+		//g_th_y_L_vs_th_y_R->Draw("p");
 		c->Write("canvas_th_y_L_vs_th_y_R");
 	}
 	
@@ -1961,13 +1963,13 @@ int main(int argc, char **argv)
 	h_th_y_R_N->Write();
 	h_th_y_R_F->Write();
 
-	{
-		double x[] = {0, 1, 2, 3};
-		double y[] = {anal.th_y_lcut_L, anal.th_y_hcut_L, anal.th_y_lcut_R, anal.th_y_hcut_R};
-		TGraph *g = new TGraph(4, x, y);
-		g->SetName("g_th_y_cuts");
-		g->Write();
-	}
+//	{
+//		double x[] = {0, 1, 2, 3};
+//		double y[] = {anal.th_y_lcut_L, anal.th_y_hcut_L, anal.th_y_lcut_R, anal.th_y_hcut_R};
+//		TGraph *g = new TGraph(4, x, y);
+//		g->SetName("g_th_y_cuts");
+//		g->Write();
+//	}
 
 	/*
 	gDirectory = outF->mkdir("selected - angles, alternative");
@@ -1999,8 +2001,8 @@ int main(int argc, char **argv)
 	h_vtx_y_L->Write();
 	h_vtx_y_R->Write();
 	
-	h_vtx_x_safe->Write();
-	h_vtx_y_safe->Write();
+//	h_vtx_x_safe->Write();
+//	h_vtx_y_safe->Write();
 	
 	h_vtx_x_L_vs_vtx_x_R->Write();
 	h_vtx_y_L_vs_vtx_y_R->Write();
@@ -2013,11 +2015,11 @@ int main(int argc, char **argv)
 	h_vtx_x_diffLR->Write();
 	h_vtx_y_diffLR->Write();
 
-	h_vtx_x_diffLR_safe->Write();
-	h_vtx_y_diffLR_safe->Write();
+//	h_vtx_x_diffLR_safe->Write();
+//	h_vtx_y_diffLR_safe->Write();
 
-	h_vtx_x_diffLR_safe_corr->Write();
-	h_vtx_y_diffLR_safe_corr->Write();
+//	h_vtx_x_diffLR_safe_corr->Write();
+//	h_vtx_y_diffLR_safe_corr->Write();
 	
 	h_vtx_x_diffLR_vs_th_x->Write();
 	h_vtx_y_diffLR_vs_th_y->Write();
@@ -2047,92 +2049,92 @@ int main(int argc, char **argv)
 
 
 	gDirectory = outF->mkdir("optics");
-	h_x_L_F_vs_th_x_L->Write();
-	h_x_R_F_vs_th_x_R->Write();
-	p_x_L_N_vs_th_x_L->Write();
-	p_x_L_F_vs_th_x_L->Write();
-	p_x_R_N_vs_th_x_R->Write();
-	p_x_R_F_vs_th_x_R->Write();
-
-	p_th_x_R_vs_th_x_L->Write();
-	p_th_y_R_vs_th_y_L->Write();
-	p_th_y_LF_vs_th_y_LN->Write();
-	p_th_y_RF_vs_th_y_RN->Write();
-	
-	h_thl_y_L_vs_y_LF->Write();
-	h_thl_y_R_vs_y_RF->Write();
-	h_thl_y_L_vs_thl_y_R->Write();
-
-	p_thl_y_L_vs_y_LF->Write();
-	p_thl_y_R_vs_y_RF->Write();
-	p_thl_y_L_vs_thl_y_R->Write();
-	
-	gDirectory = outF->mkdir("binning");
-	for (unsigned int bi = 0; bi < binnings.size(); bi++)
-	{
-		TGraph *g = new TGraph();
-		g->SetName(("g_binning_"+binnings[bi]).c_str());
-		g->SetTitle(";bin center;bin width");
-
-		TH1D *h = bh_t_Nev_before[bi];
-		for (int bin = 1; bin <= h->GetNbinsX(); bin++)
-			g->SetPoint(g->GetN(), h->GetBinCenter(bin), h->GetBinWidth(bin));
-
-		g->Write();
-	}
-
-	gDirectory = outF->mkdir("time dependences");
-	p_diffLR_th_x_vs_time->Write();
-	ProfileToRMSGraph(p_diffLR_th_x_vs_time, gRMS_diffLR_th_x_vs_time);
-	gRMS_diffLR_th_x_vs_time->Write();
-
-	p_diffLR_th_y_vs_time->Write();
-	ProfileToRMSGraph(p_diffLR_th_y_vs_time, gRMS_diffLR_th_y_vs_time);
-	gRMS_diffLR_th_y_vs_time->Write();
-
-	p_diffNF_th_y_L_vs_time->Write();
-	ProfileToRMSGraph(p_diffNF_th_y_L_vs_time, gRMS_diffNF_th_y_L_vs_time);
-	gRMS_diffNF_th_y_L_vs_time->Write();
-
-	p_diffNF_th_y_R_vs_time->Write();
-	ProfileToRMSGraph(p_diffNF_th_y_R_vs_time, gRMS_diffNF_th_y_R_vs_time);
-	gRMS_diffNF_th_y_R_vs_time->Write();
-
-	p_vtx_x_vs_time->Write();
-	ProfileToRMSGraph(p_vtx_x_vs_time, gRMS_vtx_x_vs_time);
-	gRMS_vtx_x_vs_time->Write();
-
-	TGraphErrors *g_beam_div_x_vs_time = new TGraphErrors; g_beam_div_x_vs_time->SetName("g_beam_div_x_vs_time"); g_beam_div_x_vs_time->SetTitle(";timestamp;beam divergence in x");
-	TGraphErrors *g_sensor_res_x_vs_time = new TGraphErrors; g_sensor_res_x_vs_time->SetName("g_sensor_res_x_vs_time"); g_sensor_res_x_vs_time->SetTitle(";timestamp;sensor resolution in x");
-	for (int i = 0; i <= gRMS_vtx_x_vs_time->GetN(); ++i)
-	{
-		double time=0., si_diff=0., si_vtx=0.;
-		gRMS_vtx_x_vs_time->GetPoint(i, time, si_vtx);
-		gRMS_diffLR_th_x_vs_time->GetPoint(i, time, si_diff);
-
-		double si_bdx = si_vtx * sqrt(2.) / 90. * 1E-3;	// in rad
-		double si_srx = sqrt(si_diff*si_diff/2. - si_bdx*si_bdx);
-
-		g_beam_div_x_vs_time->SetPoint(i, time, si_bdx);
-		g_sensor_res_x_vs_time->SetPoint(i, time, si_srx);
-	}
-
-	g_beam_div_x_vs_time->Write();
-	g_sensor_res_x_vs_time->Write();
-
-	p_th_x_R_vs_time->Write();
-	p_th_y_R_vs_time->Write();
-	p_th_x_L_vs_time->Write();
-	p_th_y_L_vs_time->Write();
-
-	g_ext_diffLR_th_x_vs_time->Write();
-	g_ext_diffLR_th_y_vs_time->Write();
-
-	p_input_beam_div_x_vs_time->Write();
-	p_input_beam_div_y_vs_time->Write();
-
-	g_L_L_F_vs_time->Write();
-	g_L_R_F_vs_time->Write();
+//	h_x_L_F_vs_th_x_L->Write();
+//	h_x_R_F_vs_th_x_R->Write();
+//	p_x_L_N_vs_th_x_L->Write();
+//	p_x_L_F_vs_th_x_L->Write();
+//	p_x_R_N_vs_th_x_R->Write();
+//	p_x_R_F_vs_th_x_R->Write();
+//
+//	p_th_x_R_vs_th_x_L->Write();
+//	p_th_y_R_vs_th_y_L->Write();
+//	p_th_y_LF_vs_th_y_LN->Write();
+//	p_th_y_RF_vs_th_y_RN->Write();
+//	
+//	h_thl_y_L_vs_y_LF->Write();
+//	h_thl_y_R_vs_y_RF->Write();
+//	h_thl_y_L_vs_thl_y_R->Write();
+//
+//	p_thl_y_L_vs_y_LF->Write();
+//	p_thl_y_R_vs_y_RF->Write();
+//	p_thl_y_L_vs_thl_y_R->Write();
+//	
+//	gDirectory = outF->mkdir("binning");
+//	for (unsigned int bi = 0; bi < binnings.size(); bi++)
+//	{
+//		TGraph *g = new TGraph();
+//		g->SetName(("g_binning_"+binnings[bi]).c_str());
+//		g->SetTitle(";bin center;bin width");
+//
+//		TH1D *h = bh_t_Nev_before[bi];
+//		for (int bin = 1; bin <= h->GetNbinsX(); bin++)
+//			g->SetPoint(g->GetN(), h->GetBinCenter(bin), h->GetBinWidth(bin));
+//
+//		g->Write();
+//	}
+//
+//	gDirectory = outF->mkdir("time dependences");
+//	p_diffLR_th_x_vs_time->Write();
+//	ProfileToRMSGraph(p_diffLR_th_x_vs_time, gRMS_diffLR_th_x_vs_time);
+//	gRMS_diffLR_th_x_vs_time->Write();
+//
+//	p_diffLR_th_y_vs_time->Write();
+//	ProfileToRMSGraph(p_diffLR_th_y_vs_time, gRMS_diffLR_th_y_vs_time);
+//	gRMS_diffLR_th_y_vs_time->Write();
+//
+//	p_diffNF_th_y_L_vs_time->Write();
+//	ProfileToRMSGraph(p_diffNF_th_y_L_vs_time, gRMS_diffNF_th_y_L_vs_time);
+//	gRMS_diffNF_th_y_L_vs_time->Write();
+//
+//	p_diffNF_th_y_R_vs_time->Write();
+//	ProfileToRMSGraph(p_diffNF_th_y_R_vs_time, gRMS_diffNF_th_y_R_vs_time);
+//	gRMS_diffNF_th_y_R_vs_time->Write();
+//
+//	p_vtx_x_vs_time->Write();
+//	ProfileToRMSGraph(p_vtx_x_vs_time, gRMS_vtx_x_vs_time);
+//	gRMS_vtx_x_vs_time->Write();
+//
+//	TGraphErrors *g_beam_div_x_vs_time = new TGraphErrors; g_beam_div_x_vs_time->SetName("g_beam_div_x_vs_time"); g_beam_div_x_vs_time->SetTitle(";timestamp;beam divergence in x");
+//	TGraphErrors *g_sensor_res_x_vs_time = new TGraphErrors; g_sensor_res_x_vs_time->SetName("g_sensor_res_x_vs_time"); g_sensor_res_x_vs_time->SetTitle(";timestamp;sensor resolution in x");
+//	for (int i = 0; i <= gRMS_vtx_x_vs_time->GetN(); ++i)
+//	{
+//		double time=0., si_diff=0., si_vtx=0.;
+//		gRMS_vtx_x_vs_time->GetPoint(i, time, si_vtx);
+//		gRMS_diffLR_th_x_vs_time->GetPoint(i, time, si_diff);
+//
+//		double si_bdx = si_vtx * sqrt(2.) / 90. * 1E-3;	// in rad
+//		double si_srx = sqrt(si_diff*si_diff/2. - si_bdx*si_bdx);
+//
+//		g_beam_div_x_vs_time->SetPoint(i, time, si_bdx);
+//		g_sensor_res_x_vs_time->SetPoint(i, time, si_srx);
+//	}
+//
+//	g_beam_div_x_vs_time->Write();
+//	g_sensor_res_x_vs_time->Write();
+//
+//	p_th_x_R_vs_time->Write();
+//	p_th_y_R_vs_time->Write();
+//	p_th_x_L_vs_time->Write();
+//	p_th_y_L_vs_time->Write();
+//
+//	g_ext_diffLR_th_x_vs_time->Write();
+//	g_ext_diffLR_th_y_vs_time->Write();
+//
+//	p_input_beam_div_x_vs_time->Write();
+//	p_input_beam_div_y_vs_time->Write();
+//
+//	g_L_L_F_vs_time->Write();
+//	g_L_R_F_vs_time->Write();
 
 	TDirectory *accDir = outF->mkdir("acceptance correction");
 	for (unsigned int bi = 0; bi < binnings.size(); bi++)
@@ -2143,52 +2145,52 @@ int main(int argc, char **argv)
 		bh_t_before[bi]->Write();
 		bh_t_after_no_corr[bi]->Write();
 		bh_t_after[bi]->Write();
-		bp_t_phi_corr[bi]->Write();
-		bp_t_full_corr[bi]->Write();
+		//bp_t_phi_corr[bi]->Write();
+		//bp_t_full_corr[bi]->Write();
 	
-		c = new TCanvas("t cmp");
-		c->SetLogy(1);
-		bh_t_after[bi]->Draw("");
-		bh_t_before[bi]->Draw("same");
-		c->Write();
+		//c = new TCanvas("t cmp");
+		//c->SetLogy(1);
+		//bh_t_after[bi]->Draw("");
+		//bh_t_before[bi]->Draw("same");
+		//c->Write();
 	}
 		
 	gDirectory = accDir;
 	
-	p_t_ub_div_corr->Write();
+	//p_t_ub_div_corr->Write();
 	
 	h_th_y_vs_th_x_before->Write();
 	h_th_y_vs_th_x_after->Write();
 	h_th_vs_phi_after->Write();
 	
-	g_weight_vs_th_y->Write();
+	//g_weight_vs_th_y->Write();
 
-	g_th_y_vs_th_x_acc->Write();
+	//g_th_y_vs_th_x_acc->Write();
 	
 	TDirectory *normDir = outF->mkdir("normalization");
-	for (unsigned int bi = 0; bi < binnings.size(); bi++)
-	{
-		gDirectory = normDir->mkdir(binnings[bi].c_str());
-		bh_t_normalized[bi]->Write();
-		bh_t_normalized_rel_diff[bi]->Write();
-	}
-
-	gDirectory = normDir;
-	p_norm_corr->Write();
-	p_3outof4_corr->Write();
-
-	h_th_y_vs_th_x_normalized->Write();
-
-	g_norm_corr_vs_div_corr->Write();
-	
-	TDirectory *normUnfDir = outF->mkdir("normalization+unfolding");
-	for (unsigned int bi = 0; bi < binnings.size(); bi++)
-	{
-		gDirectory = normUnfDir->mkdir(binnings[bi].c_str());
-		
-		bh_t_normalized_unsmeared[bi]->Write();
-		bh_t_normalized_unsmeared_rel_diff[bi]->Write();
-	}
+//	for (unsigned int bi = 0; bi < binnings.size(); bi++)
+//	{
+//		gDirectory = normDir->mkdir(binnings[bi].c_str());
+//		bh_t_normalized[bi]->Write();
+//		bh_t_normalized_rel_diff[bi]->Write();
+//	}
+//
+//	gDirectory = normDir;
+//	p_norm_corr->Write();
+//	p_3outof4_corr->Write();
+//
+//	h_th_y_vs_th_x_normalized->Write();
+//
+//	g_norm_corr_vs_div_corr->Write();
+//	
+//	TDirectory *normUnfDir = outF->mkdir("normalization+unfolding");
+//	for (unsigned int bi = 0; bi < binnings.size(); bi++)
+//	{
+//		gDirectory = normUnfDir->mkdir(binnings[bi].c_str());
+//		
+//		bh_t_normalized_unsmeared[bi]->Write();
+//		bh_t_normalized_unsmeared_rel_diff[bi]->Write();
+//	}
 
 	/*
 	gDirectory = outF->mkdir("background");
