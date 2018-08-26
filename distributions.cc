@@ -1020,7 +1020,7 @@ int main(int argc, char **argv)
 		//}
 
 		// determine normalization factors (luminosity + corrections)
-		//double inefficiency_3outof4 = anal.inefficiency_3outof4;
+		double inefficiency_3outof4 = anal.inefficiency_3outof4;
 		//if (anal.use_3outof4_efficiency_fits)
 		//{
 		//	inefficiency_3outof4 = 0.;
@@ -1030,9 +1030,9 @@ int main(int argc, char **argv)
 		//	inefficiency_3outof4 += 1. - f_3outof4_efficiency_R_F->Eval(k.th_y * 1E6);
 		//}
 
-		//double inefficiency_shower_near = anal.inefficiency_shower_near;
+		double inefficiency_shower_near = anal.inefficiency_shower_near;
 
-		//double inefficiency_pile_up = anal.inefficiency_pile_up;
+		double inefficiency_pile_up = anal.inefficiency_pile_up;
 		//if (anal.use_pileup_efficiency_fits)
 		//	inefficiency_pile_up = corrg_pileup->Eval(ev.timestamp);
 
@@ -1920,8 +1920,8 @@ int main(int argc, char **argv)
 //
 //	p_th_x_diffLR_vs_vtx_x->Write();
 
-	th_x_sigmaLR_vs_th_x->Write();
-	th_y_sigmaLR_vs_th_y->Write();
+	//th_x_sigmaLR_vs_th_x->Write();
+	//th_y_sigmaLR_vs_th_y->Write();
 	
 //	th_x_diffLR_safe->Write();
 //	th_y_diffLR_safe->Write();

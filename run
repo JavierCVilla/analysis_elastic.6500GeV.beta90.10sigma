@@ -88,7 +88,7 @@ function RunOneDir()
 	
 	echo "$tag @ $dir > compiling"
         rootcling -f $top_dir/TotemAnalysis/TotemNtuplizer/TotemEvent.cxx -I$top_dir -c $top_dir/TotemAnalysis/TotemNtuplizer/interface/RawDataFormats.h $top_dir/TotemAnalysis/TotemNtuplizer/interface/RPRootTrackInfo.h $top_dir/TotemAnalysis/TotemNtuplizer/interface/TriggerDataFormats.h $top_dir/TotemAnalysis/TotemNtuplizer/interface/LinkDef.h
-        g++ -O3 -Wall -I"$top_dir" `root-config --libs` -lMinuit -lMinuit2 `root-config --cflags` $top_dir/TotemAnalysis/TotemNtuplizer/TotemEvent.cxx "$src_file" -o "$exe_file" &> "$tag.log_compile"
+        g++ -O3 -Wall -I"$top_dir" `root-config --libs` -lMinuit `root-config --cflags` $top_dir/TotemAnalysis/TotemNtuplizer/TotemEvent.cxx "$src_file" -o "$exe_file" &> "$tag.log_compile"
 
 	# compilation error?
  	if [ $? -ne 0 ]
